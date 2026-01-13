@@ -144,26 +144,14 @@
                 // Process Loans & Cards
                 const today = new Date();
                 dataD.forEach(debt => {
-                    if (debt.type === 'loan' && debt.remaining_installments > 0) {
-                        let currentMonth = today.getMonth();
-                        let currentYear = today.getFullYear();
+                    if (debt.type === 'loan') {
+                        // Use start_date to project ALL installments
+                        const startDate = new Date(debt.start_date);
 
-                        // Let's project 24 months forward for now or remaining installments
-                        const count = Math.min(debt.remaining_installments, 24);
-
-                        for (let i = 0; i < count; i++) {
-                            // Logic: Always project starting from NEXT due date relative to today?
-                            // Or simplify: Project for THIS month (if future) + next X months.
-
-                            // Let's keep it simple: Project from THIS month based on due day.
-                            // If due day passed in this month, user might have paid or missed.
-                            // But showing it in past on calendar is fine/good.
-
-                            let targetMonth = currentMonth + i;
-                            let yearOffset = Math.floor(targetMonth / 12);
-                            let monthIndex = targetMonth % 12;
-
-                            let eventDate = new Date(currentYear + yearOffset, monthIndex, debt.due_date_day);
+                        for (let i = 0; i < debt.total_installments; i++) {
+                            // Correct logic: Add 'i' months to startDate
+                            let eventDate = new Date(startDate);
+                            eventDate.setMonth(startDate.getMonth() + i);
 
                             events.push({
                                 title: `${debt.name} (${i + 1}/${debt.total_installments})`,
@@ -179,10 +167,7 @@
                             });
                         }
                     } else if (debt.type === 'credit_card') {
-                        // Project next 12 months due dates? Or just next one?
-                        // User said "Son ödeme tarihini ekle". Typically recurring.
-                        // Let's project 6 months ahead for cards to be helpful.
-
+                        // Project next 6 months due dates
                         let currentMonth = today.getMonth();
                         let currentYear = today.getFullYear();
 

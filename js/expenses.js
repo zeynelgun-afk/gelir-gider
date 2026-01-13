@@ -48,10 +48,14 @@ async function loadExpenses() {
     }
 }
 
+// Editing State
+let editingId = null;
+
 function renderExpenseList(data) {
     const listContainer = document.getElementById('expense-list');
 
     if (data.length === 0) {
+        // ... (Empty State Code - keep existing)
         listContainer.innerHTML = `
             <div style="padding: 3rem; text-align: center; color: var(--color-text-secondary);">
                 <span class="material-symbols-outlined" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">receipt_long</span>
@@ -64,9 +68,11 @@ function renderExpenseList(data) {
 
     listContainer.innerHTML = data.map(item => {
         const date = new Date(item.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
+        // Escape quotes for JSON string
+        const itemStr = encodeURIComponent(JSON.stringify(item));
 
         return `
-            <div class="list-item">
+            <div class="list-item" onclick="openModal('${itemStr}')" style="cursor: pointer;">
                 <div class="item-icon" style="background-color: var(--color-error-bg); color: var(--color-error);">
                     <span class="material-symbols-outlined">${item.icon || 'receipt'}</span>
                 </div>
@@ -82,19 +88,14 @@ function renderExpenseList(data) {
     }).join('');
 }
 
-function updateTotal(data) {
-    const total = data.reduce((sum, item) => sum + item.amount, 0);
-    document.getElementById('total-expense-display').textContent =
-        total.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' });
-}
+// ... (updateTotal keeps same)
 
-/* Modal Logic (Replicated from app.js to keep standalone or we could extract to common js) */
-// ideally we should have a shared.js, but for simplicity we'll inline minimal needed
+/* Modal Logic */
 function initModal() {
     const modal = document.getElementById('expense-modal');
-    // const openBtn is handled inline in HTML onclick="openModal()" for simplicity in secondary pages
     const closeBtn = document.getElementById('close-modal-btn');
     const cancelBtn = document.getElementById('cancel-btn');
+    const deleteBtn = document.getElementById('delete-btn'); // New
     const backdrop = document.querySelector('.modal-backdrop');
     const form = document.getElementById('expense-form');
 
@@ -102,18 +103,61 @@ function initModal() {
         if (el) el.addEventListener('click', closeModal);
     });
 
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', handleDelete);
+    }
+
     if (form) {
         form.addEventListener('submit', handleFormSubmit);
     }
 }
 
-function openModal() {
+function openModal(dataStr) {
     document.getElementById('expense-modal').classList.remove('hidden');
+    const deleteBtn = document.getElementById('delete-btn');
+
+    if (dataStr) {
+        // Edit Mode
+        const data = JSON.parse(decodeURIComponent(dataStr));
+        editingId = data.id;
+
+        // Fill Form
+        document.getElementById('title').value = data.title;
+        document.getElementById('amount').value = data.amount;
+        document.getElementById('category').value = data.category;
+        document.getElementById('is_recurring').checked = data.is_recurring;
+
+        // Show Delete
+        if (deleteBtn) deleteBtn.classList.remove('hidden');
+    } else {
+        // Add Mode
+        editingId = null;
+        document.getElementById('expense-form').reset();
+        if (deleteBtn) deleteBtn.classList.add('hidden');
+    }
+}
+
+async function handleDelete() {
+    if (!editingId) return;
+
+    if (confirm('Bu harcamayı silmek istediğinize emin misiniz?')) {
+        try {
+            const res = await fetch(`/api/transactions/${editingId}`, { method: 'DELETE' });
+            if (res.ok) {
+                closeModal();
+                loadExpenses();
+                Toast.show('Silindi', 'success');
+            }
+        } catch (err) {
+            Toast.show('Hata', 'error');
+        }
+    }
 }
 
 function closeModal() {
     document.getElementById('expense-modal').classList.add('hidden');
     document.getElementById('expense-form').reset();
+    editingId = null;
 }
 
 async function handleFormSubmit(e) {
@@ -129,15 +173,27 @@ async function handleFormSubmit(e) {
     };
 
     try {
-        const res = await fetch('/api/transactions', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
+        let res;
+        if (editingId) {
+            // Edit
+            res = await fetch(`/api/transactions/${editingId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+        } else {
+            // Create
+            res = await fetch('/api/transactions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+        }
+
         if (res.ok) {
             closeModal();
-            loadExpenses(); // Reload list
-            Toast.show('Başarıyla eklendi!', 'success');
+            loadExpenses();
+            Toast.show(editingId ? 'Güncellendi!' : 'Başarıyla eklendi!', 'success');
         }
     } catch (err) {
         Toast.show('Bir hata oluştu.', 'error');

@@ -147,10 +147,14 @@
                     <label for="is_recurring" style="margin-bottom: 0; font-size: 1rem;">Her Ay Tekrarla</label>
                 </div>
 
-                <div class="form-actions">
-                    <button type="button" id="cancel-btn" class="btn"
-                        style="border: 2px solid var(--color-border);">Vazgec</button>
-                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                <div class="form-actions" style="justify-content: space-between;">
+                    <button type="button" id="delete-btn" class="btn hidden"
+                        style="background-color: var(--color-error); color: white;">Sil</button>
+                    <div class="flex gap-2">
+                        <button type="button" id="cancel-btn" class="btn"
+                            style="border: 2px solid var(--color-border);">Vazgeç</button>
+                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                    </div>
                 </div>
             </form>
         </div>

@@ -97,11 +97,15 @@
                     </select>
                 </div>
 
-                <div class="form-actions">
-                    <button type="button" id="cancel-btn" class="btn"
-                        style="border: 2px solid var(--color-border);">Vazgec</button>
-                    <button type="submit" class="btn btn-primary"
-                        style="background-color: var(--color-success);">Kaydet</button>
+                <div class="form-actions" style="justify-content: space-between;">
+                    <button type="button" id="delete-btn" class="btn hidden"
+                        style="background-color: var(--color-error); color: white;">Sil</button>
+                    <div class="flex gap-2">
+                        <button type="button" id="cancel-btn" class="btn"
+                            style="border: 2px solid var(--color-border);">Vazgec</button>
+                        <button type="submit" class="btn btn-primary"
+                            style="background-color: var(--color-success);">Kaydet</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -133,8 +137,10 @@
                 } else {
                     listContainer.innerHTML = data.map(item => {
                         const date = new Date(item.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
+                        const itemStr = encodeURIComponent(JSON.stringify(item));
+
                         return `
-                            <div class="list-item">
+                            <div class="list-item" onclick="openModal('${itemStr}')" style="cursor: pointer;">
                                 <div class="item-icon" style="background-color: var(--color-success-bg); color: var(--color-success);">
                                     <span class="material-symbols-outlined">account_balance_wallet</span>
                                 </div>
@@ -160,10 +166,14 @@
             }
         }
 
+        // Edit State
+        let editingId = null;
+
         function initModal() {
             const modal = document.getElementById('income-modal');
             const closeBtn = document.getElementById('close-modal-btn');
             const cancelBtn = document.getElementById('cancel-btn');
+            const deleteBtn = document.getElementById('delete-btn'); // New
             const backdrop = document.querySelector('.modal-backdrop');
             const form = document.getElementById('income-form');
 
@@ -171,18 +181,58 @@
                 if (el) el.addEventListener('click', closeModal);
             });
 
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', handleDelete);
+            }
+
             if (form) {
                 form.addEventListener('submit', handleFormSubmit);
             }
         }
 
-        function openModal() {
+        function openModal(dataStr) {
             document.getElementById('income-modal').classList.remove('hidden');
+            const deleteBtn = document.getElementById('delete-btn');
+
+            if (dataStr) {
+                // Edit Mode
+                const data = JSON.parse(decodeURIComponent(dataStr));
+                editingId = data.id;
+
+                document.getElementById('title').value = data.title;
+                document.getElementById('amount').value = data.amount;
+                document.getElementById('category').value = data.category;
+
+                if (deleteBtn) deleteBtn.classList.remove('hidden');
+            } else {
+                // Add Mode
+                editingId = null;
+                document.getElementById('income-form').reset();
+                if (deleteBtn) deleteBtn.classList.add('hidden');
+            }
         }
 
         function closeModal() {
             document.getElementById('income-modal').classList.add('hidden');
             document.getElementById('income-form').reset();
+            editingId = null;
+        }
+
+        async function handleDelete() {
+            if (!editingId) return;
+
+            if (confirm('Bu geliri silmek istediğinize emin misiniz?')) {
+                try {
+                    const res = await fetch(`/api/transactions/${editingId}`, { method: 'DELETE' });
+                    if (res.ok) {
+                        closeModal();
+                        initIncomePage();
+                        Toast.show('Silindi', 'success');
+                    }
+                } catch (err) {
+                    Toast.show('Hata', 'error');
+                }
+            }
         }
 
         async function handleFormSubmit(e) {
@@ -197,15 +247,27 @@
             };
 
             try {
-                const res = await fetch('/api/transactions', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
+                let res;
+                if (editingId) {
+                    // Update
+                    res = await fetch(`/api/transactions/${editingId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                } else {
+                    // Create
+                    res = await fetch('/api/transactions', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                }
+
                 if (res.ok) {
                     closeModal();
                     initIncomePage();
-                    Toast.show('Gelir Eklendi!', 'success');
+                    Toast.show(editingId ? 'Güncellendi!' : 'Gelir Eklendi!', 'success');
                 }
             } catch (err) {
                 Toast.show('Hata oluştu.', 'error');

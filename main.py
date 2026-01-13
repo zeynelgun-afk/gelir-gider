@@ -187,5 +187,68 @@ def create_debt(debt: schemas.DebtCreate, db: Session = Depends(get_db)):
     db.refresh(db_debt)
     return db_debt
 
+@app.delete("/api/debts/{debt_id}")
+def delete_debt(debt_id: int, db: Session = Depends(get_db)):
+    db_debt = db.query(models.Debt).filter(models.Debt.id == debt_id).first()
+    if not db_debt:
+        raise HTTPException(status_code=404, detail="Debt not found")
+    db.delete(db_debt)
+    db.commit()
+    return {"message": "Deleted"}
+
+@app.put("/api/debts/{debt_id}", response_model=schemas.Debt)
+def update_debt(debt_id: int, debt: schemas.DebtCreate, db: Session = Depends(get_db)):
+    db_debt = db.query(models.Debt).filter(models.Debt.id == debt_id).first()
+    if not db_debt:
+        raise HTTPException(status_code=404, detail="Debt not found")
+    
+    for key, value in debt.dict().items():
+        setattr(db_debt, key, value)
+    
+    db.commit()
+    db.refresh(db_debt)
+    return db_debt
+
+# Transaction Edit/Delete
+@app.delete("/api/transactions/{transaction_id}")
+def delete_transaction(transaction_id: int, db: Session = Depends(get_db)):
+    db_txn = db.query(models.Transaction).filter(models.Transaction.id == transaction_id).first()
+    if not db_txn:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    db.delete(db_txn)
+    db.commit()
+    return {"message": "Deleted"}
+
+@app.put("/api/transactions/{transaction_id}", response_model=schemas.Transaction)
+def update_transaction(transaction_id: int, txn: schemas.TransactionCreate, db: Session = Depends(get_db)):
+    db_txn = db.query(models.Transaction).filter(models.Transaction.id == transaction_id).first()
+    if not db_txn:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    
+    for key, value in txn.dict().items():
+        setattr(db_txn, key, value)
+
+    db.commit()
+    db.refresh(db_txn)
+    return db_txn
+        db.add(db_budget)
+    
+    db.commit()
+    db.refresh(db_budget)
+    return db_budget
+
+# Debt Endpoints
+@app.get("/api/debts", response_model=List[schemas.Debt])
+def get_debts(db: Session = Depends(get_db)):
+    return db.query(models.Debt).all()
+
+@app.post("/api/debts", response_model=schemas.Debt)
+def create_debt(debt: schemas.DebtCreate, db: Session = Depends(get_db)):
+    db_debt = models.Debt(**debt.dict())
+    db.add(db_debt)
+    db.commit()
+    db.refresh(db_debt)
+    return db_debt
+
 # Serve Static Files (Frontend)
 app.mount("/", StaticFiles(directory=".", html=True), name="static")

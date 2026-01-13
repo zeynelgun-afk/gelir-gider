@@ -21,6 +21,9 @@ async function loadDebts() {
     }
 }
 
+// Editing State
+let editingId = null;
+
 function renderDebtList(data) {
     const listContainer = document.getElementById('debt-list');
 
@@ -36,6 +39,7 @@ function renderDebtList(data) {
     }
 
     listContainer.innerHTML = data.map(item => {
+        const itemStr = encodeURIComponent(JSON.stringify(item));
         const isLoan = item.type === 'loan';
         const icon = isLoan ? 'real_estate_agent' : 'credit_card';
         const typeLabel = isLoan ? 'Kredi' : 'Kredi Kartı';
@@ -43,25 +47,46 @@ function renderDebtList(data) {
         // Loan Progress
         let loanDetails = '';
         if (isLoan) {
-            // Calculate remaining roughly or strictly from DB? 
-            // For MVP, we'll assume total_installments and calculate end date or similar.
-            // Let's just show details provided.
-            const totalPaid = (item.total_installments - (item.remaining_installments || item.total_installments)) * item.monthly_payment;
-            // Actually MVP model doesn't track "remaining" dynamically yet, 
-            // but let's just show the static info for now.
+            // Calculate elapsed months since start date to determine Paid Installments
+            const startDate = new Date(item.start_date);
+            const today = new Date();
+
+            let monthsPassed = (today.getFullYear() - startDate.getFullYear()) * 12 + (today.getMonth() - startDate.getMonth());
+
+            // If today is past the due day in current month, count this month as paid (or due)
+            if (today.getDate() >= item.due_date_day) {
+                monthsPassed += 1;
+            }
+
+            // Clamp values
+            const paidInstallments = Math.max(0, Math.min(monthsPassed, item.total_installments));
+            const remainingInstallments = item.total_installments - paidInstallments;
+            const remainingBalance = remainingInstallments * item.monthly_payment;
+
+            // Progress Bar
+            const progressPercent = (paidInstallments / item.total_installments) * 100;
 
             loanDetails = `
                 <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--color-border);">
                     <div class="flex justify-between text-sm text-secondary mb-1">
                         <span>Aylık Taksit: <strong>${formatCurrency(item.monthly_payment)}</strong></span>
-                        <span>Vade: <strong>${item.total_installments} Ay</strong></span>
+                        <span>Durum: <strong>${paidInstallments}/${item.total_installments}</strong></span>
+                    </div>
+                    
+                     <div style="width: 100%; height: 6px; background: var(--color-bg-body); border-radius: 3px; overflow: hidden; margin: 0.5rem 0;">
+                        <div style="width: ${progressPercent}%; height: 100%; background: var(--color-error); transition: width 0.3s;"></div>
+                    </div>
+
+                    <div class="flex justify-between text-sm">
+                        <span class="text-secondary">Kalan Borç:</span>
+                        <span style="font-weight: bold; color: var(--color-error);">${formatCurrency(remainingBalance)}</span>
                     </div>
                 </div>
             `;
         }
 
         return `
-            <div class="card" style="border-left: 4px solid var(--color-error);">
+            <div class="card" onclick="openModal('${itemStr}')" style="border-left: 4px solid var(--color-error); cursor: pointer;">
                 <div class="flex justify-between items-start">
                     <div class="flex gap-4">
                         <div class="icon-box" style="background-color: var(--color-error-bg); color: var(--color-error);">
@@ -93,6 +118,7 @@ function initModal() {
     const modal = document.getElementById('debt-modal');
     const closeBtn = document.getElementById('close-modal-btn');
     const cancelBtn = document.getElementById('cancel-btn');
+    const deleteBtn = document.getElementById('delete-btn'); // New
     const backdrop = document.querySelector('.modal-backdrop');
     const form = document.getElementById('debt-form');
 
@@ -100,32 +126,106 @@ function initModal() {
         if (el) el.addEventListener('click', closeModal);
     });
 
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', handleDelete);
+    }
+
     if (form) {
         form.addEventListener('submit', handleFormSubmit);
     }
 }
 
-function openModal() {
+function openModal(dataStr) {
     document.getElementById('debt-modal').classList.remove('hidden');
+    const deleteBtn = document.getElementById('delete-btn');
+
+    if (dataStr) {
+        // Edit Mode
+        const data = JSON.parse(decodeURIComponent(dataStr));
+        editingId = data.id;
+
+        // Fill Form
+        document.getElementById('name').value = data.name;
+        document.getElementById('total_amount').value = data.total_amount;
+
+        // Handle Radios & specific fields
+        const radios = document.getElementsByName('type');
+        radios.forEach(r => {
+            if (r.value === data.type) r.checked = true;
+        });
+
+        if (data.type === 'loan') {
+            toggleLoanFields(true);
+            document.getElementById('monthly_payment').value = data.monthly_payment;
+            document.getElementById('total_installments').value = data.total_installments;
+
+            // Format ISO date to YYYY-MM-DD for input
+            if (data.start_date) {
+                document.getElementById('start_date_input').value = data.start_date.split('T')[0];
+            }
+        } else {
+            toggleLoanFields(false);
+            document.getElementById('due_date_day').value = data.due_date_day;
+        }
+
+        if (deleteBtn) deleteBtn.classList.remove('hidden');
+    } else {
+        // Add Mode
+        editingId = null;
+        document.getElementById('debt-form').reset();
+        toggleLoanFields(false); // Default
+        if (deleteBtn) deleteBtn.classList.add('hidden');
+    }
 }
 
 function closeModal() {
     document.getElementById('debt-modal').classList.add('hidden');
     document.getElementById('debt-form').reset();
-    toggleLoanFields(false); // Reset to card view
+    toggleLoanFields(false);
+    editingId = null;
+}
+
+async function handleDelete() {
+    if (!editingId) return;
+
+    if (confirm('Bu borcu silmek istediğinize emin misiniz?')) {
+        try {
+            const res = await fetch(`/api/debts/${editingId}`, { method: 'DELETE' });
+            if (res.ok) {
+                closeModal();
+                loadDebts();
+                Toast.show('Silindi', 'success');
+            }
+        } catch (err) {
+            Toast.show('Hata', 'error');
+        }
+    }
 }
 
 // Global for inline HTML access
 window.toggleLoanFields = function (show) {
-    const fields = document.getElementById('loan-fields');
+    const loanFields = document.getElementById('loan-fields');
+    const cardGroup = document.getElementById('card-due-date-group');
+    const loanDateGroup = document.getElementById('loan-start-date-group');
+
     if (show) {
-        fields.classList.remove('hidden');
+        loanFields.classList.remove('hidden');
+        cardGroup.classList.add('hidden');
+        loanDateGroup.classList.remove('hidden');
+
         document.getElementById('monthly_payment').required = true;
         document.getElementById('total_installments').required = true;
+        document.getElementById('start_date_input').required = true;
+        document.getElementById('due_date_day').required = false;
     } else {
-        fields.classList.add('hidden');
+        loanFields.classList.add('hidden');
+        cardGroup.classList.remove('hidden');
+        loanDateGroup.classList.add('hidden');
+
         document.getElementById('monthly_payment').required = false;
         document.getElementById('total_installments').required = false;
+        document.getElementById('start_date_input').required = false;
+        document.getElementById('due_date_day').required = true;
     }
 }
 
@@ -137,27 +237,52 @@ async function handleFormSubmit(e) {
     const data = {
         type: type,
         name: formData.get('name'),
-        total_amount: parseFloat(formData.get('total_amount')),
-        due_date_day: parseInt(formData.get('due_date_day')),
-        start_date: new Date().toISOString()
+        total_amount: parseFloat(formData.get('total_amount'))
     };
 
     if (type === 'loan') {
         data.monthly_payment = parseFloat(formData.get('monthly_payment'));
         data.total_installments = parseInt(formData.get('total_installments'));
-        data.remaining_installments = data.total_installments; // Initial full count
+        data.remaining_installments = data.total_installments;
+
+        // Handle Start Date
+        const startDateVal = formData.get('start_date_input');
+        if (startDateVal) {
+            data.start_date = new Date(startDateVal).toISOString();
+            data.due_date_day = new Date(startDateVal).getDate();
+        } else {
+            data.start_date = new Date().toISOString();
+            data.due_date_day = 1;
+        }
+
+    } else {
+        // Credit Card
+        data.due_date_day = parseInt(formData.get('due_date_day'));
+        data.start_date = new Date().toISOString();
     }
 
     try {
-        const res = await fetch('/api/debts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
+        let res;
+        if (editingId) {
+            // Update
+            res = await fetch(`/api/debts/${editingId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+        } else {
+            // Create
+            res = await fetch('/api/debts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+        }
+
         if (res.ok) {
             closeModal();
             loadDebts();
-            Toast.show('Borç Kaydedildi!', 'success');
+            Toast.show(editingId ? 'Güncellendi!' : 'Borç Kaydedildi!', 'success');
         } else {
             Toast.show('Hata oluştu', 'error');
         }

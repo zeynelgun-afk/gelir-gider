@@ -9,19 +9,77 @@ async function initDashboard() {
     initModal(); // Initialize Modal Events
 
     try {
-        const [statsData, billsData] = await Promise.all([
+        const [statsData, billsData, debtsData] = await Promise.all([
             fetch('/api/dashboard').then(res => res.json()),
-            fetch('/api/bills').then(res => res.json())
+            fetch('/api/bills').then(res => res.json()),
+            fetch('/api/debts').then(res => res.json())
         ]);
 
+        // Merge Recurring Bills and Debt Installments
+        const allUpcoming = mergeBillsAndDebts(billsData, debtsData);
+
         renderStats(statsData);
-        renderBills(billsData);
+        renderBills(allUpcoming);
         renderChart(statsData);
 
     } catch (error) {
         console.error("Veri yüklenirken hata oluştu:", error);
         alert("Sunucuya bağlanılamadı. Lütfen backend'in çalıştığından emin olun.");
     }
+}
+
+function mergeBillsAndDebts(bills, debts) {
+    const today = new Date();
+    const currentDay = today.getDate();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+
+    // 1. Process Debts into "Bill-like" objects
+    const debtBills = debts.map(debt => {
+        let isDue = false;
+        let title = debt.name;
+        let amount = 0;
+        let dueDateText = `Her ayın ${debt.due_date_day}. günü`;
+
+        if (debt.type === 'loan') {
+            title = `${debt.name} (Taksit)`;
+            amount = debt.monthly_payment;
+
+            // Check if loan is active
+            // Simple check: if we assume logic from debts.js, calculate if remaining > 0
+            // For MVP, just show if Total Installments > 0
+            if (debt.remaining_installments <= 0) return null;
+
+        } else {
+            title = `${debt.name} (Ekstre)`;
+            amount = debt.total_amount; // Ideally strictly minimum payment or statement balance
+        }
+
+        // Determine status based on date
+        // If due day < current day, mark as "Unpaid" (Overdue) or "Upcoming" next month?
+        // Simplicity: Always show as "Upcoming" for this month or next.
+
+        let status = 'unpaid';
+        if (currentDay > debt.due_date_day) {
+            // Past Due for this month
+            dueDateText = `Gecikti: ${debt.due_date_day} ${today.toLocaleString('tr-TR', { month: 'long' })}`;
+        } else {
+            dueDateText = `${debt.due_date_day} ${today.toLocaleString('tr-TR', { month: 'long' })}`;
+        }
+
+        return {
+            id: `debt-${debt.id}`, // Virtual ID
+            title: title,
+            amount: amount,
+            due_date_str: dueDateText,
+            status: status,
+            icon: debt.type === 'loan' ? 'real_estate_agent' : 'credit_card',
+            isVirtual: true // Flag to disable action button if needed
+        };
+    }).filter(item => item !== null);
+
+    // 2. Combine and Sort by day (approx)
+    return [...bills, ...debtBills];
 }
 
 function formatCurrency(amount) {
@@ -91,7 +149,15 @@ function renderBills(bills) {
 
     billsContainer.innerHTML = bills.map(bill => {
         let actionHtml = '';
-        if (bill.status === 'unpaid') {
+
+        if (bill.isVirtual) {
+            // Link to Debts Page
+            actionHtml = `
+                <a href="borclar.html" class="btn" style="padding: 0.25rem 0.75rem; font-size: 0.75rem; background-color: var(--color-bg-body); border: 1px solid var(--color-border); color: var(--color-text-primary); text-decoration: none;">
+                    Detay
+                </a>
+             `;
+        } else if (bill.status === 'unpaid') {
             actionHtml = `
                 <button onclick="payBill(${bill.id})" class="btn" style="padding: 0.25rem 0.75rem; font-size: 0.75rem; background-color: var(--color-primary); color: white;">
                     Öde
