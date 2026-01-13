@@ -28,7 +28,11 @@ function setupFilters() {
 
 async function loadExpenses() {
     const listContainer = document.getElementById('expense-list');
-    listContainer.innerHTML = '<div style="padding: 2rem; text-align: center;">Yükleniyor...</div>';
+    if (typeof Loader !== 'undefined') {
+        listContainer.innerHTML = Loader.getHTML();
+    } else {
+        listContainer.innerHTML = '<div style="padding: 2rem; text-align: center;">Yükleniyor...</div>';
+    }
 
     let url = '/api/transactions?type=expense&limit=100';
     if (currentCategory) {
@@ -36,15 +40,47 @@ async function loadExpenses() {
     }
 
     try {
-        const response = await fetch(url);
-        const transactions = await response.json();
+        const [transRes, debtsRes] = await Promise.all([
+            fetch(url),
+            fetch('/api/debts')
+        ]);
 
-        renderExpenseList(transactions);
-        updateTotal(transactions);
+        const transactions = await transRes.json();
+        const debts = await debtsRes.json();
+
+        // Convert debts to transaction-like objects for this month
+        const debtTransactions = debts.map(d => {
+            const isLoan = d.type === 'loan';
+            // Only show active loans
+            if (isLoan && d.remaining_installments <= 0) return null;
+
+            return {
+                id: `debt-${d.id}`,
+                title: isLoan ? `${d.name} (Taksit)` : `${d.name} (Ekstre)`,
+                amount: isLoan ? d.monthly_payment : d.total_amount, // Simplified
+                category: 'Borç/Kredi',
+                date: new Date().toISOString(), // Show as current
+                icon: isLoan ? 'real_estate_agent' : 'credit_card',
+                is_virtual: true
+            };
+        }).filter(d => d !== null);
+
+        // Merge
+        const allItems = [...transactions, ...debtTransactions];
+
+        // Sort by date desc (though virtuals are 'now')
+        allItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        renderExpenseList(allItems);
+        updateTotal(allItems);
 
     } catch (error) {
         console.error('Hata:', error);
-        listContainer.innerHTML = '<div style="padding: 2rem; text-align: center; color: red;">Veriler yüklenemedi.</div>';
+        if (typeof Loader !== 'undefined') {
+            listContainer.innerHTML = Loader.getErrorHTML();
+        } else {
+            listContainer.innerHTML = '<div style="padding: 2rem; text-align: center; color: red;">Veriler yüklenemedi.</div>';
+        }
     }
 }
 

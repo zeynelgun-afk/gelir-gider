@@ -5,6 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function initIncomePage() {
     const listContainer = document.getElementById('income-list');
+
+    if (typeof Loader !== 'undefined') {
+        listContainer.innerHTML = Loader.getHTML();
+    } else {
+        listContainer.innerHTML = '<div style="padding: 2rem; text-align: center;">Yükleniyor...</div>';
+    }
+
     try {
         const response = await fetch('/api/transactions?type=income&limit=100');
         const data = await response.json();

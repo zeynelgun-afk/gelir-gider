@@ -9,7 +9,12 @@ async function initBudgetPage() {
 
 async function loadBudgets() {
     const listContainer = document.getElementById('budget-list');
-    listContainer.innerHTML = '<div style="padding: 2rem; text-align: center;">Yükleniyor...</div>';
+
+    if (typeof Loader !== 'undefined') {
+        listContainer.innerHTML = Loader.getHTML();
+    } else {
+        listContainer.innerHTML = '<div style="padding: 2rem; text-align: center;">Yükleniyor...</div>';
+    }
 
     try {
         const response = await fetch('/api/budgets/status');
@@ -18,7 +23,11 @@ async function loadBudgets() {
         renderBudgetList(data);
     } catch (error) {
         console.error('Hata:', error);
-        listContainer.innerHTML = '<div style="padding: 2rem; text-align: center; color: red;">Veriler yüklenemedi.</div>';
+        if (typeof Loader !== 'undefined') {
+            listContainer.innerHTML = Loader.getErrorHTML();
+        } else {
+            listContainer.innerHTML = '<div style="padding: 2rem; text-align: center; color: red;">Veriler yüklenemedi.</div>';
+        }
     }
 }
 

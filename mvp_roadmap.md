@@ -42,4 +42,4 @@ This document tracks the remaining tasks to complete the "Ev Bütçe & Harcama D
 1. **Step 1**: Implement `butce.html` and budget logic. (Done)
 2. **Step 2**: Implement `takvim.html` with FullCalendar. (Done)
 3. **Step 3**: Enhance Recurring Expenses (Add "Recurring" toggle to forms). (Done)
-4. **Step 4**: Global UI Polish (Toasts, refined styles).
+4. **Step 4**: Global UI Polish (Toasts, refined styles). (Done)

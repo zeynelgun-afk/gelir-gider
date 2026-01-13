@@ -51,15 +51,19 @@ function renderDebtList(data) {
             const startDate = new Date(item.start_date);
             const today = new Date();
 
-            let monthsPassed = (today.getFullYear() - startDate.getFullYear()) * 12 + (today.getMonth() - startDate.getMonth());
+            // Calculate total month difference
+            let monthsDiff = (today.getFullYear() - startDate.getFullYear()) * 12 + (today.getMonth() - startDate.getMonth());
 
-            // If today is past the due day in current month, count this month as paid (or due)
+            // If the start date day is passed in current month, it counts as a full month cycle?
+            // Actually usually loans are paid on specific day.
+            // If today's day >= due_day (or start day), then current month is paid/due.
+
             if (today.getDate() >= item.due_date_day) {
-                monthsPassed += 1;
+                monthsDiff += 1;
             }
 
-            // Clamp values
-            const paidInstallments = Math.max(0, Math.min(monthsPassed, item.total_installments));
+            // Ensure we don't go below 0 (future start date)
+            const paidInstallments = Math.max(0, Math.min(monthsDiff, item.total_installments));
             const remainingInstallments = item.total_installments - paidInstallments;
             const remainingBalance = remainingInstallments * item.monthly_payment;
 
@@ -132,6 +136,24 @@ function initModal() {
 
     if (form) {
         form.addEventListener('submit', handleFormSubmit);
+    }
+
+    // Auto-Calculate Total Amount
+    const monthlyInput = document.getElementById('monthly_payment');
+    const installmentsInput = document.getElementById('total_installments');
+    const totalInput = document.getElementById('total_amount');
+
+    function calculateTotal() {
+        const monthly = parseFloat(monthlyInput.value);
+        const count = parseInt(installmentsInput.value);
+        if (!isNaN(monthly) && !isNaN(count)) {
+            totalInput.value = (monthly * count).toFixed(2);
+        }
+    }
+
+    if (monthlyInput && installmentsInput) {
+        monthlyInput.addEventListener('input', calculateTotal);
+        installmentsInput.addEventListener('input', calculateTotal);
     }
 }
 
@@ -217,6 +239,12 @@ window.toggleLoanFields = function (show) {
         document.getElementById('total_installments').required = true;
         document.getElementById('start_date_input').required = true;
         document.getElementById('due_date_day').required = false;
+
+        // Auto Calc Mode
+        const totalInput = document.getElementById('total_amount');
+        totalInput.readOnly = true;
+        totalInput.placeholder = "Otomatik Hesaplanacak";
+        totalInput.style.backgroundColor = "var(--color-bg-body)";
     } else {
         loanFields.classList.add('hidden');
         cardGroup.classList.remove('hidden');
@@ -226,6 +254,12 @@ window.toggleLoanFields = function (show) {
         document.getElementById('total_installments').required = false;
         document.getElementById('start_date_input').required = false;
         document.getElementById('due_date_day').required = true;
+
+        // Manual Mode
+        const totalInput = document.getElementById('total_amount');
+        totalInput.readOnly = false;
+        totalInput.placeholder = "0.00";
+        totalInput.style.backgroundColor = "";
     }
 }
 

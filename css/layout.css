@@ -17,8 +17,43 @@ header {
 }
 
 .nav-links {
+    position: fixed;
+    top: 70px;
+    /* Header height approx */
+    left: 0;
+    width: 100%;
+    background-color: var(--color-bg-card);
+    flex-direction: column;
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     display: none;
-    /* Mobile First: Hidden by default */
+    z-index: 49;
+}
+
+.nav-links.active {
+    display: flex;
+}
+
+.nav-links a {
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+}
+
+.nav-links a:hover {
+    background-color: var(--color-bg-body);
+}
+
+/* Mobile Menu Button */
+.mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    padding: 0.5rem;
 }
 
 /* Main Grid */
@@ -46,7 +81,17 @@ header {
 
     .nav-links {
         display: flex;
+        position: static;
+        flex-direction: row;
+        width: auto;
+        border: none;
+        padding: 0;
+        box-shadow: none;
         gap: 2rem;
+    }
+
+    .mobile-menu-btn {
+        display: none;
     }
 }
 

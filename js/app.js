@@ -2,7 +2,17 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     initDashboard();
+    renderVersion();
 });
+
+function renderVersion() {
+    if (typeof APP_VERSION !== 'undefined') {
+        const versionEl = document.getElementById('app-version-display');
+        if (versionEl) {
+            versionEl.textContent = `v${APP_VERSION}`;
+        }
+    }
+}
 
 async function initDashboard() {
     renderWelcomeMessage();
@@ -24,7 +34,10 @@ async function initDashboard() {
 
     } catch (error) {
         console.error("Veri yüklenirken hata oluştu:", error);
-        alert("Sunucuya bağlanılamadı. Lütfen backend'in çalıştığından emin olun.");
+        // alert("Sunucuya bağlanılamadı. Lütfen backend'in çalıştığından emin olun.");
+        if (typeof Toast !== 'undefined') {
+            Toast.show("Veriler yüklenemedi. Backend çalışıyor mu?", 'error');
+        }
     }
 }
 
@@ -283,21 +296,34 @@ function renderChart(data) {
                 return seriesName + " (%" + opts.w.globals.series[opts.seriesIndex] + ")"
             }
         },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    height: 300
+                },
+                legend: {
+                    position: 'bottom',
+                    fontSize: '12px'
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '65%'
+                        }
+                    }
+                }
+            }
+        }],
         tooltip: {
             y: {
                 formatter: function (val) {
-                    // We don't have the exact amount here easily without passing it, 
-                    // but we can show the percentage or just the value if it was amounts.
-                    // The data passed is percentages.
                     return "%" + val
                 }
             }
         }
     };
 
-    // Dispose if exists (in case of re-render) but here we just render once usually
-    // checking if already rendered could be good practice
-    // For now simple render:
     const chart = new ApexCharts(document.querySelector("#expense-chart"), options);
     chart.render();
 }
