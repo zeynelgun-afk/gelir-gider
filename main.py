@@ -21,7 +21,10 @@ def get_db():
 # Seed Data (If DB is empty)
 def seed_data(db: Session):
     if db.query(models.Transaction).first():
+        print("Database already contains data. Skipping seed.")
         return
+    
+    print("Database is empty. Seeding initial data...")
     
     # Existing Data from Design
     seed_transactions = [
@@ -43,6 +46,7 @@ def seed_data(db: Session):
     for t in seed_transactions:
         db.add(t)
     db.commit()
+    print("Seeding completed successfully.")
 
 @app.on_event("startup")
 def on_startup():
