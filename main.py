@@ -231,24 +231,6 @@ def update_transaction(transaction_id: int, txn: schemas.TransactionCreate, db: 
     db.commit()
     db.refresh(db_txn)
     return db_txn
-        db.add(db_budget)
-    
-    db.commit()
-    db.refresh(db_budget)
-    return db_budget
-
-# Debt Endpoints
-@app.get("/api/debts", response_model=List[schemas.Debt])
-def get_debts(db: Session = Depends(get_db)):
-    return db.query(models.Debt).all()
-
-@app.post("/api/debts", response_model=schemas.Debt)
-def create_debt(debt: schemas.DebtCreate, db: Session = Depends(get_db)):
-    db_debt = models.Debt(**debt.dict())
-    db.add(db_debt)
-    db.commit()
-    db.refresh(db_debt)
-    return db_debt
 
 # Serve Static Files (Frontend)
 app.mount("/", StaticFiles(directory=".", html=True), name="static")

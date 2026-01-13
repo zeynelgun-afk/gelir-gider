@@ -3,26 +3,40 @@
      * Renk Paleti (Yüksek Kontrast - Senior Friendly)
      * Referans: Tasarim Sistemi
      */
-    --color-primary: #0d59f2;      /* Birincil Mavi - Aksiyonlar */
-    --color-primary-dark: #0a46c2; /* Hover durumları için */
-    --color-primary-light: #e6f0ff; /* Arkaplan vurguları */
-    
-    --color-success: #2D7D46;      /* Başarı Yeşili - Pozitif Durumlar */
-    --color-success-bg: #eaf5ee;
-    
-    --color-error: #D32F2F;        /* Hata Kırmızısı - Uyarılar */
-    --color-error-bg: #fdeceb;
-    
-    --color-warning: #ed6c02;      /* Uyarı Turuncusu */
-    --color-warning-bg: #fff4e5;
-    
-    --color-text-main: #1A1A1A;    /* Ana Metin - Siyah */
-    --color-text-secondary: #666666; /* İkincil Metin - Gri */
-    --color-text-inverse: #FFFFFF;   /* Beyaz Metin */
+    --color-primary: #0d59f2;
+    /* Birincil Mavi - Aksiyonlar */
+    --color-primary-dark: #0a46c2;
+    /* Hover durumları için */
+    --color-primary-light: #e6f0ff;
+    /* Arkaplan vurguları */
+    --color-primary-bg: #e6f0ff;
+    /* Alias for consistency */
 
-    --color-bg-body: #f5f6f8;      /* Sayfa Arkaplanı */
-    --color-bg-card: #FFFFFF;      /* Kart Arkaplanı */
-    --color-border: #e0e0e0;       /* Kenarlıklar */
+    --color-success: #2D7D46;
+    /* Başarı Yeşili - Pozitif Durumlar */
+    --color-success-bg: #eaf5ee;
+
+    --color-error: #D32F2F;
+    /* Hata Kırmızısı - Uyarılar */
+    --color-error-bg: #fdeceb;
+
+    --color-warning: #ed6c02;
+    /* Uyarı Turuncusu */
+    --color-warning-bg: #fff4e5;
+
+    --color-text-main: #1A1A1A;
+    /* Ana Metin - Siyah */
+    --color-text-secondary: #666666;
+    /* İkincil Metin - Gri */
+    --color-text-inverse: #FFFFFF;
+    /* Beyaz Metin */
+
+    --color-bg-body: #f5f6f8;
+    /* Sayfa Arkaplanı */
+    --color-bg-card: #FFFFFF;
+    /* Kart Arkaplanı */
+    --color-border: #e0e0e0;
+    /* Kenarlıklar */
 
     /* 
      * Tipografi (Lexend)
@@ -31,14 +45,21 @@
      * Tasarımdaki "Body - 24px" masaüstü içindir.
      */
     --font-family: 'Lexend', sans-serif;
-    
-    --text-xs: 0.875rem;   /* 14px */
-    --text-sm: 1rem;       /* 16px */
-    --text-base: 1.25rem;  /* 20px - Biraz büyütüldü */
-    --text-lg: 1.5rem;     /* 24px - Standart okuma boyutu */
-    --text-xl: 1.75rem;    /* 28px */
-    --text-2xl: 2rem;      /* 32px */
-    --text-3xl: 3rem;      /* 48px - Başlıklar */
+
+    --text-xs: 0.875rem;
+    /* 14px */
+    --text-sm: 1rem;
+    /* 16px */
+    --text-base: 1.25rem;
+    /* 20px - Biraz büyütüldü */
+    --text-lg: 1.5rem;
+    /* 24px - Standart okuma boyutu */
+    --text-xl: 1.75rem;
+    /* 28px */
+    --text-2xl: 2rem;
+    /* 32px */
+    --text-3xl: 3rem;
+    /* 48px - Başlıklar */
 
     /* Spacing & Layout */
     --radius-sm: 0.5rem;

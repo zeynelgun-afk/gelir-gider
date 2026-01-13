@@ -213,8 +213,93 @@ async function payBill(id) {
 function renderChart(data) {
     document.getElementById('chart-total').textContent = formatCurrency(data.total_expense);
 
-    // In a real implementation we would update SVG stroke offsets here using data.chart_data percentages
-    // For this MVP, we are keeping the static SVG visual as per the Design System requirement
+    const labels = Object.keys(data.chart_data);
+    const series = Object.values(data.chart_data);
+
+    // Color mapping based on category names matching CSS variables
+    // Categories: "Mutfak", "Sağlık", "Ulaşım", "Diğer"
+    const colorMap = {
+        'Mutfak': '#0d59f2', // var(--color-primary)
+        'Sağlık': '#2D7D46', // var(--color-success)
+        'Ulaşım': '#ed6c02', // var(--color-warning)
+        'Diğer': '#6366f1'
+    };
+
+    const colors = labels.map(label => colorMap[label] || '#999999');
+
+    const options = {
+        series: series,
+        labels: labels,
+        chart: {
+            type: 'donut',
+            height: 350,
+            fontFamily: "'Lexend', sans-serif",
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350
+                }
+            }
+        },
+        plotOptions: {
+            pie: {
+                startAngle: -90,
+                endAngle: 90,
+                offsetY: 10,
+                donut: {
+                    size: '75%',
+                    labels: {
+                        show: false // We use our custom center overlay
+                    }
+                }
+            }
+        },
+        grid: {
+            padding: {
+                bottom: -80
+            }
+        },
+        colors: colors,
+        dataLabels: {
+            enabled: false
+        },
+        legend: {
+            position: 'bottom',
+            fontSize: '14px',
+            fontFamily: "'Lexend', sans-serif",
+            fontWeight: 500,
+            itemMargin: {
+                horizontal: 10,
+                vertical: 5
+            },
+            formatter: function (seriesName, opts) {
+                return seriesName + " (%" + opts.w.globals.series[opts.seriesIndex] + ")"
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    // We don't have the exact amount here easily without passing it, 
+                    // but we can show the percentage or just the value if it was amounts.
+                    // The data passed is percentages.
+                    return "%" + val
+                }
+            }
+        }
+    };
+
+    // Dispose if exists (in case of re-render) but here we just render once usually
+    // checking if already rendered could be good practice
+    // For now simple render:
+    const chart = new ApexCharts(document.querySelector("#expense-chart"), options);
+    chart.render();
 }
 
 /* Modal Logic */

@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/notifications.css">
+    <!-- ApexCharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
 
 <body>
@@ -93,51 +95,14 @@
                     <span class="text-secondary font-medium">Bu Ay (Ekim)</span>
                 </div>
 
-                <div class="chart-wrapper">
-                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100"
-                        style="width: 100%; height: 100%; transform: rotate(-90deg);">
-                        <!-- Mutfak 40% -->
-                        <circle cx="50" cy="50" fill="transparent" r="40" stroke="#0d59f2" stroke-dasharray="251.2"
-                            stroke-dashoffset="150.72" stroke-width="20"></circle>
-                        <!-- Sağlık 25% -->
-                        <circle cx="50" cy="50" fill="transparent" r="40" stroke="#2D7D46" stroke-dasharray="251.2"
-                            stroke-dashoffset="213.52" stroke-width="20" transform="rotate(90, 50, 50)"></circle>
-                        <!-- Ulaşım 20% -->
-                        <circle cx="50" cy="50" fill="transparent" r="40" stroke="#ed6c02" stroke-dasharray="251.2"
-                            stroke-dashoffset="226.08" stroke-width="20" transform="rotate(180, 50, 50)"></circle>
-                        <!-- Diğer 15% -->
-                        <circle cx="50" cy="50" fill="transparent" r="40" stroke="#6366f1" stroke-dasharray="251.2"
-                            stroke-dashoffset="238.64" stroke-width="20" transform="rotate(252, 50, 50)"></circle>
-                    </svg>
-                    <div class="chart-center">
+                <div class="chart-wrapper"
+                    style="position: relative; min-height: 250px; display: flex; justify-content: center;">
+                    <div id="expense-chart"></div>
+                    <!-- Center Label for Donut -->
+                    <div class="chart-center"
+                        style="position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none;">
                         <p class="text-secondary font-bold" style="font-size: 0.875rem;">Toplam</p>
                         <p id="chart-total" style="font-size: 1.5rem; font-weight: 900;">₺0,00</p>
-                    </div>
-                </div>
-
-                <!-- Legend -->
-                <div style="margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="flex items-center gap-2">
-                        <div
-                            style="width: 1rem; height: 1rem; border-radius: 50%; background-color: var(--color-primary);">
-                        </div>
-                        <span class="font-medium">Mutfak (%40)</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div
-                            style="width: 1rem; height: 1rem; border-radius: 50%; background-color: var(--color-success);">
-                        </div>
-                        <span class="font-medium">Sağlık (%25)</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div
-                            style="width: 1rem; height: 1rem; border-radius: 50%; background-color: var(--color-warning);">
-                        </div>
-                        <span class="font-medium">Ulaşım (%20)</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div style="width: 1rem; height: 1rem; border-radius: 50%; background-color: #6366f1;"></div>
-                        <span class="font-medium">Diğer (%15)</span>
                     </div>
                 </div>
             </div>
