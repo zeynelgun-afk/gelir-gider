@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borçlar | Finansal Özet</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/notifications.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="container header-content">
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="btn-icon" style="background-color: var(--color-bg-body);">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+                <h1 style="font-size: 1.5rem; font-weight: 800;">Borçlarım</h1>
+            </div>
+
+            <div class="flex gap-2">
+                <button class="btn btn-primary" onclick="openModal()" style="background-color: var(--color-error);">
+                    <span class="material-symbols-outlined">add_card</span>
+                    Borç Ekle
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-8">
+
+        <!-- Tabs -->
+        <div class="flex gap-4 mb-6 border-b pb-2">
+            <button class="font-bold text-primary border-b-2 border-primary pb-1">Aktif Borçlar</button>
+        </div>
+
+        <div id="debt-list" class="flex flex-col gap-4">
+            <div style="padding: 2rem; text-align: center;">Yükleniyor...</div>
+        </div>
+
+    </main>
+
+    <!-- Modal (Add Debt) -->
+    <div id="debt-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content card">
+            <div class="modal-header">
+                <h2 style="font-size: 1.5rem; font-weight: 800;">Yeni Borç Ekle</h2>
+                <button id="close-modal-btn" class="btn-icon" aria-label="Kapat">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <form id="debt-form" class="modal-form">
+
+                <div class="form-group">
+                    <label>Borç Tipi</label>
+                    <div class="flex gap-4">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="type" value="credit_card" checked
+                                onchange="toggleLoanFields(false)">
+                            Kredi Kartı
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="type" value="loan" onchange="toggleLoanFields(true)">
+                            Kredi
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Adı</label>
+                    <input type="text" id="name" name="name" placeholder="Örn: Bonus Kart veya Konut Kredisi" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="total_amount">Toplam Borç Tutar (TL)</label>
+                    <input type="number" id="total_amount" name="total_amount" placeholder="0.00" step="0.01" required>
+                </div>
+
+                <div class="form-group" id="card-due-date-group">
+                    <label for="due_date_day">Son Ödeme Günü (Ayın kaçı?)</label>
+                    <input type="number" id="due_date_day" name="due_date_day" placeholder="1-31" min="1" max="31">
+                </div>
+
+                <div class="form-group hidden" id="loan-start-date-group">
+                    <label for="start_date_input">İlk Taksit Tarihi</label>
+                    <input type="date" id="start_date_input" name="start_date_input">
+                </div>
+
+                <!-- Loan Specific Fields -->
+                <div id="loan-fields" class="hidden">
+                    <div class="form-group">
+                        <label for="monthly_payment">Aylık Taksit Tutarı (TL)</label>
+                        <input type="number" id="monthly_payment" name="monthly_payment" placeholder="0.00" step="0.01">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="total_installments">Toplam Taksit Sayısı</label>
+                        <input type="number" id="total_installments" name="total_installments" placeholder="Örn: 24">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="cancel-btn" class="btn"
+                        style="border: 2px solid var(--color-border);">Vazgec</button>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/notifications.js"></script>
+    <script src="js/debts.js"></script>
+</body>
+
+</html>

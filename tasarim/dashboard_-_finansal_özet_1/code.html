@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard - Finansal Özet</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#197fe6",
+              "background-light": "#f6f7f8",
+              "background-dark": "#111921",
+            },
+            fontFamily: {
+              "display": ["Lexend"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Lexend', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 28px;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 300px;
+        }
+        .pie-slice {
+            stroke-width: 2;
+            stroke: white;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen text-[#0e141b] dark:text-slate-100">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between border-b border-solid border-[#e7edf3] dark:border-slate-800 bg-white dark:bg-background-dark px-10 py-5 sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<div class="size-10 flex items-center justify-center bg-primary rounded-lg text-white">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</div>
+<h1 class="text-2xl font-bold leading-tight tracking-tight">Finansal Özet</h1>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex gap-6 text-lg font-medium">
+<a class="text-primary border-b-2 border-primary pb-1" href="#">Ana Sayfa</a>
+<a class="hover:text-primary transition-colors" href="#">Raporlar</a>
+<a class="hover:text-primary transition-colors" href="#">Ayarlar</a>
+</nav>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-xl h-12 w-12 bg-slate-100 dark:bg-slate-800 text-[#0e141b] dark:text-slate-100 hover:bg-slate-200">
+<span class="material-symbols-outlined">person</span>
+</button>
+<button class="flex items-center justify-center rounded-xl h-12 w-12 bg-red-50 text-red-600 hover:bg-red-100">
+<span class="material-symbols-outlined">logout</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex flex-1 justify-center py-8">
+<div class="layout-content-container flex flex-col max-w-[1200px] flex-1 px-4">
+<!-- Welcome Section -->
+<div class="px-4 mb-8">
+<h2 class="text-3xl font-bold">Hoş Geldiniz, Ahmet Bey</h2>
+<p class="text-slate-500 dark:text-slate-400 text-lg mt-1">Bugün 24 Ekim, Perşembe. Finansal durumunuz güncel.</p>
+</div>
+<!-- Stats Cards Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+<!-- Income Card -->
+<div class="flex flex-col gap-4 rounded-xl p-8 border border-[#d0dbe7] dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-emerald-600 bg-emerald-50 p-3 rounded-lg">trending_up</span>
+<p class="text-emerald-600 text-lg font-bold">+%5</p>
+</div>
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-lg font-medium mb-1">Gelir</p>
+<p class="text-3xl font-extrabold leading-tight">₺12.500,00</p>
+</div>
+</div>
+<!-- Expenses Card -->
+<div class="flex flex-col gap-4 rounded-xl p-8 border border-[#d0dbe7] dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-rose-600 bg-rose-50 p-3 rounded-lg">trending_down</span>
+<p class="text-rose-600 text-lg font-bold">-%2</p>
+</div>
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-lg font-medium mb-1">Gider</p>
+<p class="text-3xl font-extrabold leading-tight">₺8.250,00</p>
+</div>
+</div>
+<!-- Payments Card -->
+<div class="flex flex-col gap-4 rounded-xl p-8 border border-[#d0dbe7] dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-amber-600 bg-amber-50 p-3 rounded-lg">payments</span>
+<p class="text-emerald-600 text-lg font-bold">+12%</p>
+</div>
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-lg font-medium mb-1">Ödemeler</p>
+<p class="text-3xl font-extrabold leading-tight">₺1.400,00</p>
+</div>
+</div>
+<!-- Balance Card -->
+<div class="flex flex-col gap-4 rounded-xl p-8 border-2 border-primary bg-primary/5 dark:bg-primary/10 shadow-md">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-primary bg-primary/20 p-3 rounded-lg">savings</span>
+<p class="text-primary text-lg font-bold">+8%</p>
+</div>
+<div>
+<p class="text-primary text-lg font-bold mb-1">Kalan</p>
+<p class="text-3xl font-extrabold leading-tight text-primary">₺2.850,00</p>
+</div>
+</div>
+</div>
+<!-- Main Grid: Payments and Charts -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-4 mt-6">
+<!-- Upcoming Payments Section -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-[#d0dbe7] dark:border-slate-800 overflow-hidden shadow-sm">
+<div class="flex items-center justify-between px-6 py-5 border-b border-slate-100 dark:border-slate-800">
+<h2 class="text-xl font-bold">Yaklaşan 7 Gün Ödemeleri</h2>
+<button class="text-primary font-bold text-lg">Hepsini Gör</button>
+</div>
+<div class="divide-y divide-slate-100 dark:divide-slate-800">
+<!-- List Item 1 -->
+<div class="flex items-center gap-6 px-6 py-6 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<div class="text-blue-600 flex items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/30 shrink-0 size-14">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<div class="flex flex-col flex-1">
+<p class="text-xl font-bold leading-none mb-1">Elektrik Faturası</p>
+<p class="text-slate-500 text-base">Son Gün: 26 Ekim</p>
+</div>
+<div class="text-right">
+<p class="text-xl font-extrabold">₺450,00</p>
+<p class="text-rose-500 font-bold text-sm">Ödenmedi</p>
+</div>
+</div>
+<!-- List Item 2 -->
+<div class="flex items-center gap-6 px-6 py-6 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<div class="text-cyan-600 flex items-center justify-center rounded-xl bg-cyan-50 dark:bg-cyan-900/30 shrink-0 size-14">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<div class="flex flex-col flex-1">
+<p class="text-xl font-bold leading-none mb-1">Su Faturası</p>
+<p class="text-slate-500 text-base">Son Gün: 28 Ekim</p>
+</div>
+<div class="text-right">
+<p class="text-xl font-extrabold">₺120,00</p>
+<p class="text-rose-500 font-bold text-sm">Ödenmedi</p>
+</div>
+</div>
+<!-- List Item 3 -->
+<div class="flex items-center gap-6 px-6 py-6 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<div class="text-orange-600 flex items-center justify-center rounded-xl bg-orange-50 dark:bg-orange-900/30 shrink-0 size-14">
+<span class="material-symbols-outlined">router</span>
+</div>
+<div class="flex flex-col flex-1">
+<p class="text-xl font-bold leading-none mb-1">İnternet</p>
+<p class="text-slate-500 text-base">Son Gün: 30 Ekim</p>
+</div>
+<div class="text-right">
+<p class="text-xl font-extrabold">₺290,00</p>
+<p class="text-emerald-500 font-bold text-sm">Otomatik Ödeme</p>
+</div>
+</div>
+</div>
+<div class="p-6">
+<button class="w-full bg-primary text-white py-4 rounded-lg text-xl font-bold shadow-lg hover:brightness-110 active:scale-[0.98] transition-all">
+                                Yeni Gider Ekle
+                            </button>
+</div>
+</div>
+<!-- Spending Chart Section -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-[#d0dbe7] dark:border-slate-800 p-8 shadow-sm">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-xl font-bold">Harcama Kategorileri</h2>
+<span class="text-slate-500 font-medium">Bu Ay (Ekim)</span>
+</div>
+<div class="flex flex-col items-center">
+<!-- Visual representation of a Pie Chart using SVG -->
+<div class="relative w-64 h-64 mb-8">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 100 100">
+<!-- Mutfak 40% -->
+<circle cx="50" cy="50" fill="transparent" r="40" stroke="#197fe6" stroke-dasharray="251.2" stroke-dashoffset="150.72" stroke-width="20"></circle>
+<!-- Sağlık 25% -->
+<circle cx="50" cy="50" fill="transparent" r="40" stroke="#10b981" stroke-dasharray="251.2" stroke-dashoffset="213.52" stroke-width="20" transform="rotate(90, 50, 50)"></circle>
+<!-- Ulaşım 20% -->
+<circle cx="50" cy="50" fill="transparent" r="40" stroke="#f59e0b" stroke-dasharray="251.2" stroke-dashoffset="226.08" stroke-width="20" transform="rotate(180, 50, 50)"></circle>
+<!-- Diğer 15% -->
+<circle cx="50" cy="50" fill="transparent" r="40" stroke="#6366f1" stroke-dasharray="251.2" stroke-dashoffset="238.64" stroke-width="20" transform="rotate(252, 50, 50)"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<p class="text-sm text-slate-500 font-bold">Toplam</p>
+<p class="text-2xl font-black">₺8.250</p>
+</div>
+</div>
+<!-- Legend -->
+<div class="grid grid-cols-2 gap-x-12 gap-y-4 w-full px-4">
+<div class="flex items-center gap-3">
+<div class="size-4 rounded-full bg-primary"></div>
+<span class="text-lg font-medium">Mutfak (%40)</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="size-4 rounded-full bg-emerald-500"></div>
+<span class="text-lg font-medium">Sağlık (%25)</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="size-4 rounded-full bg-amber-500"></div>
+<span class="text-lg font-medium">Ulaşım (%20)</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="size-4 rounded-full bg-indigo-500"></div>
+<span class="text-lg font-medium">Diğer (%15)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Accessibility Tip for older users -->
+<div class="mx-4 mt-8 mb-12 p-6 rounded-xl bg-blue-50 border border-blue-100 flex items-center gap-4">
+<span class="material-symbols-outlined text-blue-600 scale-125">info</span>
+<p class="text-blue-800 text-lg font-medium">
+<strong>Yardım:</strong> Yazıları daha büyük görmek için klavyenizden <kbd class="bg-white px-2 py-1 rounded border shadow-sm">Ctrl</kbd> ve <kbd class="bg-white px-2 py-1 rounded border shadow-sm">+</kbd> tuşlarına basabilirsiniz.
+                    </p>
+</div>
+</div>
+</main>
+<footer class="py-10 text-center border-t border-slate-200 dark:border-slate-800 mt-10">
+<p class="text-slate-500 text-lg">© 2024 Ev Finans Takip Sistemi - Kullanım Kolaylığı Odaklı Tasarım</p>
+</footer>
+</div>
+</body></html>

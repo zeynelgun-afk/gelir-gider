@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bütçeler | Finansal Özet</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/notifications.css">
+
+    <style>
+        .budget-card {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .budget-card:last-child {
+            border-bottom: none;
+        }
+
+        .progress-bar {
+            height: 1rem;
+            background-color: var(--color-bg-body);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            margin-top: 0.75rem;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--color-primary);
+            border-radius: var(--radius-full);
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+            margin-top: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container header-content">
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="btn-icon" style="background-color: var(--color-bg-body);">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+                <h1 style="font-size: 1.5rem; font-weight: 800;">Bütçelerim</h1>
+            </div>
+
+            <div class="flex gap-2">
+                <button class="btn btn-primary" onclick="openModal()">
+                    <span class="material-symbols-outlined">edit</span>
+                    Bütçe Belirle
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-8">
+
+        <!-- Budget List -->
+        <div class="card" style="padding: 0; overflow: hidden;" id="budget-list-container">
+            <div id="budget-list">
+                <div style="padding: 2rem; text-align: center;">Yükleniyor...</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal (Set Budget) -->
+    <div id="budget-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content card">
+            <div class="modal-header">
+                <h2 style="font-size: 1.5rem; font-weight: 800;">Bütçe Belirle</h2>
+                <button id="close-modal-btn" class="btn-icon" aria-label="Kapat">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <form id="budget-form" class="modal-form">
+                <div class="form-group">
+                    <label for="category">Kategori</label>
+                    <select id="category" name="category" required>
+                        <option value="Mutfak">Mutfak</option>
+                        <option value="Sağlık">Sağlık</option>
+                        <option value="Ulaşım">Ulaşım</option>
+                        <option value="Fatura">Fatura</option>
+                        <option value="Diğer">Diğer</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Aylık Limit (TL)</label>
+                    <input type="number" id="amount" name="amount" placeholder="Örn: 5000" step="0.01" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="cancel-btn" class="btn"
+                        style="border: 2px solid var(--color-border);">Vazgec</button>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/notifications.js"></script>
+    <script src="js/budget.js"></script>
+</body>
+
+</html>

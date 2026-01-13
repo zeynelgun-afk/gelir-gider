@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ödemeler ve Borç Durumu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#197fe6",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111921",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Lexend', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#0e141b] dark:text-slate-50 min-h-screen">
+<div class="flex flex-col lg:flex-row min-h-screen">
+<!-- SideNavBar -->
+<aside class="w-full lg:w-72 bg-white dark:bg-[#1a242e] border-r border-[#d0dbe7] dark:border-slate-700 flex flex-col p-6 gap-8">
+<div class="flex items-center gap-4">
+<div class="bg-primary/10 p-2 rounded-xl">
+<span class="material-symbols-outlined text-primary text-3xl">account_circle</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-lg font-bold leading-tight">Bora Bey</h1>
+<p class="text-[#4e7397] dark:text-slate-400 text-sm">Hoş geldiniz</p>
+</div>
+</div>
+<nav class="flex flex-col gap-3 flex-grow">
+<a class="flex items-center gap-4 px-4 py-4 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">home</span>
+<span class="font-medium text-lg">Ana Sayfa</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-4 rounded-xl bg-primary text-white shadow-lg shadow-primary/20" href="#">
+<span class="material-symbols-outlined text-2xl icon-fill">account_balance_wallet</span>
+<span class="font-medium text-lg">Ödemeler</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-4 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">credit_card</span>
+<span class="font-medium text-lg">Hesaplarım</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-4 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">settings</span>
+<span class="font-medium text-lg">Ayarlar</span>
+</a>
+</nav>
+<button class="w-full py-4 bg-primary text-white rounded-xl font-bold text-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined">add_circle</span>
+                Hızlı Ödeme Yap
+            </button>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex justify-center py-8 px-4 md:px-10">
+<div class="max-w-[1000px] w-full flex flex-col gap-8">
+<!-- PageHeading -->
+<header class="flex flex-col gap-4">
+<h2 class="text-4xl md:text-5xl font-black tracking-tight leading-tight">Ödemeler ve Borç Durumu</h2>
+<p class="text-[#4e7397] dark:text-slate-400 text-xl font-normal max-w-2xl">
+                        Tüm ödemelerinizi buradan takip edebilir, borçlarınızı kolayca yönetebilirsiniz.
+                    </p>
+</header>
+<!-- Stats Summary -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="flex flex-col gap-3 rounded-xl p-8 border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1a242e] shadow-sm">
+<p class="text-[#4e7397] dark:text-slate-400 text-lg font-medium">Toplam Borç</p>
+<p class="text-primary text-4xl font-extrabold tracking-tight">₺12,500</p>
+</div>
+<div class="flex flex-col gap-3 rounded-xl p-8 border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1a242e] shadow-sm">
+<p class="text-[#4e7397] dark:text-slate-400 text-lg font-medium">Bu Ay Ödenen</p>
+<p class="text-green-600 dark:text-green-400 text-4xl font-extrabold tracking-tight">₺4,200</p>
+</div>
+<div class="flex flex-col gap-3 rounded-xl p-8 border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1a242e] shadow-sm">
+<p class="text-[#4e7397] dark:text-slate-400 text-lg font-medium">Kalan Ödeme</p>
+<p class="text-orange-600 dark:text-orange-400 text-4xl font-extrabold tracking-tight">₺8,300</p>
+</div>
+</section>
+<!-- Section: Krediler -->
+<section class="flex flex-col gap-6">
+<div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-700 pb-2">
+<span class="material-symbols-outlined text-primary text-3xl">home_work</span>
+<h3 class="text-2xl font-bold">Krediler</h3>
+</div>
+<!-- Card 1 -->
+<div class="bg-white dark:bg-[#1a242e] rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="flex flex-col md:flex-row">
+<div class="md:w-1/3 bg-center bg-no-repeat aspect-video md:aspect-auto bg-cover" data-alt="Modern house architecture against blue sky" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCQPrYp6E_SBpdJvF_XJgWlYwkJTNGvW5jWZXBnP7FUXlbILnE48CmQp8_9zKZE0b85kZr1rFpLwjlHEh5XovEYdcVX0ethUVCxoGSwvNV9tN7QM5CNVU3FgC_10IJeS8MD024qOTuhLabNt9CQf92LBmwv5eROAXNsfOWi4y-XXzk9c_3N26h48aUW7jkTA5LPrjoZPTh0q4bhOnGdueS5zpGb-BCA9MJ9LKGBB__Lm1qy82ZpdoJhPIDeHcP7MeiEuqCwnyfblra1");'></div>
+<div class="flex flex-1 flex-col p-6 gap-6">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<p class="text-[#4e7397] dark:text-slate-400 text-lg font-medium uppercase tracking-wider">Konut Kredisi</p>
+<h4 class="text-2xl font-bold">Ziraat Bankası - Evim Kredisi</h4>
+</div>
+<span class="px-4 py-1.5 bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300 rounded-full text-sm font-bold uppercase">Yaklaşıyor</span>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between text-lg">
+<span class="font-medium">Ödenen: ₺2,100</span>
+<span class="font-bold text-primary">Kalan: ₺3,500</span>
+</div>
+<div class="w-full bg-slate-200 dark:bg-slate-700 h-6 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 38%"></div>
+</div>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-slate-100 dark:border-slate-800">
+<div class="flex flex-col">
+<p class="text-[#4e7397] dark:text-slate-400 text-base font-normal">Aylık Taksit: <span class="text-black dark:text-white font-bold">₺3,500</span></p>
+<p class="text-[#4e7397] dark:text-slate-400 text-base font-normal">Son Gün: <span class="text-black dark:text-white font-bold">15 Ekim</span></p>
+</div>
+<button class="min-w-[160px] cursor-pointer items-center justify-center rounded-xl h-14 px-8 bg-primary text-white text-lg font-bold flex gap-2 hover:bg-primary/90">
+<span class="material-symbols-outlined">check_circle</span>
+<span>Ödendi</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Kartlar -->
+<section class="flex flex-col gap-6">
+<div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-700 pb-2">
+<span class="material-symbols-outlined text-primary text-3xl">credit_card</span>
+<h3 class="text-2xl font-bold">Kartlar</h3>
+</div>
+<!-- Card 2 -->
+<div class="bg-white dark:bg-[#1a242e] rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="flex flex-col md:flex-row">
+<div class="md:w-1/3 bg-center bg-no-repeat aspect-video md:aspect-auto bg-cover" data-alt="Close up of multiple colorful credit cards" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDIalofnftLowg-TtoqDWCOztzLFi-4xmWzJ1ISHU4FApbUG552UB8tcAIurOxCgJjprsJZSgpbq4z5eHTmIqTZ6cVSTpp_RTrboATp7r7RHw02f53ztoAZWy2jygRKsFSwqzXx5QU77sr4qV5l_1mlNR28LwmMIpx0_dBitzEa_OsCG6TeJyMdDcyF0hHrzxJkHgW16cDnRb5vextiIg1lpLI4cjbMeF2_pgRPPXJTVPssZ9pSIFff3-BFyFUFluKuS5K6t-_lsYLn");'></div>
+<div class="flex flex-1 flex-col p-6 gap-6">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<p class="text-[#4e7397] dark:text-slate-400 text-lg font-medium uppercase tracking-wider">Kredi Kartı</p>
+<h4 class="text-2xl font-bold">Bonus Platinum</h4>
+</div>
+<span class="px-4 py-1.5 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 rounded-full text-sm font-bold uppercase">Ödeme Tamam</span>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between text-lg">
+<span class="font-medium">Ödenen: ₺4,200</span>
+<span class="font-bold text-primary">Kalan: ₺0</span>
+</div>
+<div class="w-full bg-slate-200 dark:bg-slate-700 h-6 rounded-full overflow-hidden">
+<div class="bg-green-500 h-full rounded-full" style="width: 100%"></div>
+</div>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-slate-100 dark:border-slate-800">
+<div class="flex flex-col">
+<p class="text-[#4e7397] dark:text-slate-400 text-base font-normal">Asgari Tutar: <span class="text-black dark:text-white font-bold">₺1,200</span></p>
+<p class="text-[#4e7397] dark:text-slate-400 text-base font-normal">Toplam Borç: <span class="text-black dark:text-white font-bold">₺4,200</span></p>
+</div>
+<button class="min-w-[160px] cursor-not-allowed items-center justify-center rounded-xl h-14 px-8 bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 text-lg font-bold flex gap-2">
+<span class="material-symbols-outlined icon-fill">task_alt</span>
+<span>Tamamlandı</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Diğer Borçlar -->
+<section class="flex flex-col gap-6">
+<div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-700 pb-2">
+<span class="material-symbols-outlined text-primary text-3xl">receipt_long</span>
+<h3 class="text-2xl font-bold">Borçlar ve Faturalar</h3>
+</div>
+<!-- Card 3 -->
+<div class="bg-white dark:bg-[#1a242e] rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="flex flex-col md:flex-row">
+<div class="md:w-1/3 bg-center bg-no-repeat aspect-video md:aspect-auto bg-cover" data-alt="Detail of a electricity bill paper" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuACwT_JILBjxXFu7PTkBwvayHA8X2sUt0p6OPp9F-CeIv9IvrDAKxibKi9Nh6Sc12OYnemxkAJyXOYRmi6jQNhbUTu4CVrAV7u45N7Lw2miaE66s3RZ39Bm_GUBu_XzLzPIi7KKxr8DSM0z4eBLpat5Njv2bsa-HANMqwGmiNUOOMV4gYDJbb0pYA9QVhXVQ8eD-lqCVkwpdeDTTnq8yKbi8fUMGeBMLovUs_OSfaOF9f1SmPXK5bhzi-N-5sCbSlJYYcmEOiyZk2ki");'></div>
+<div class="flex flex-1 flex-col p-6 gap-6">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<p class="text-[#4e7397] dark:text-slate-400 text-lg font-medium uppercase tracking-wider">Fatura</p>
+<h4 class="text-2xl font-bold">EnerjiSA - Elektrik Faturası</h4>
+</div>
+<span class="px-4 py-1.5 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 rounded-full text-sm font-bold uppercase">Gecikmiş</span>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between text-lg">
+<span class="font-medium">Ödenen: ₺0</span>
+<span class="font-bold text-red-600">Kalan: ₺650</span>
+</div>
+<div class="w-full bg-slate-200 dark:bg-slate-700 h-6 rounded-full overflow-hidden">
+<div class="bg-red-500 h-full rounded-full" style="width: 0%"></div>
+</div>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-slate-100 dark:border-slate-800">
+<div class="flex flex-col">
+<p class="text-[#4e7397] dark:text-slate-400 text-base font-normal">Tutar: <span class="text-black dark:text-white font-bold">₺650</span></p>
+<p class="text-red-600 font-bold">Son Tarih Geçti: 5 Ekim</p>
+</div>
+<button class="min-w-[160px] cursor-pointer items-center justify-center rounded-xl h-14 px-8 bg-red-600 text-white text-lg font-bold flex gap-2 hover:bg-red-700 shadow-lg shadow-red-200 dark:shadow-none">
+<span class="material-symbols-outlined">warning</span>
+<span>Şimdi Öde</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<footer class="py-10 text-center text-[#4e7397] dark:text-slate-500 text-lg">
+                    © 2023 Borç Takip Sistemi - Kullanım Kolaylığı İçin Tasarlanmıştır.
+                </footer>
+</div>
+</main>
+</div>
+</body></html>

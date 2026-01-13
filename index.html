@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finansal Özet | Senior Friendly</title>
+
+    <!-- Fonts: Lexend & Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/notifications.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="flex items-center gap-4">
+                <div class="btn-icon" style="background-color: var(--color-primary); color: white;">
+                    <span class="material-symbols-outlined">account_balance_wallet</span>
+                </div>
+                <h1 style="font-size: 1.5rem; font-weight: 800;">Finansal Özet</h1>
+            </div>
+
+            <nav class="nav-links">
+                <a href="index.html"
+                    style="color: var(--color-primary); font-weight: 600; border-bottom: 2px solid var(--color-primary);">Özet</a>
+                <a href="gelirler.html" class="text-secondary font-medium hover:text-primary">Gelirler</a>
+                <a href="harcamalar.html" class="text-secondary font-medium hover:text-primary">Harcamalar</a>
+                <a href="borclar.html" class="text-secondary font-medium hover:text-primary">Borçlar</a>
+                <a href="butce.html" class="text-secondary font-medium hover:text-primary">Bütçe</a>
+                <a href="takvim.html" class="text-secondary font-medium hover:text-primary">Takvim</a>
+            </nav>
+
+            <div class="flex gap-2">
+                <button class="btn-icon" aria-label="Profil">
+                    <span class="material-symbols-outlined">person</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container py-8" style="padding-top: 2rem; padding-bottom: 4rem;">
+
+        <!-- Welcome -->
+        <div class="mb-8" style="margin-bottom: 2rem;">
+            <h2 id="welcome-title" style="font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem;">Hoş Geldiniz</h2>
+            <p id="current-date" class="text-secondary" style="font-size: 1.125rem;"></p>
+        </div>
+
+        <!-- 1. Stats Grid (Command Center) -->
+        <div id="stats-grid" class="stats-grid">
+            <!-- Populated by JS -->
+        </div>
+
+        <!-- 2. Content Split -->
+        <div class="content-grid">
+
+            <!-- Left: Upcoming Bills -->
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <div
+                    style="padding: 1.5rem; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center;">
+                    <h3 class="font-bold" style="font-size: 1.25rem;">Yaklaşan 7 Gün Ödemeleri</h3>
+                    <a href="#" style="color: var(--color-primary); font-weight: 700;">Hepsini Gör</a>
+                </div>
+
+                <div id="bills-list">
+                    <!-- Populated by JS -->
+                </div>
+
+                <div style="padding: 1.5rem;">
+                    <button class="btn btn-primary w-full">
+                        Yeni Gider Ekle
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right: Chart (Visual Analytics) -->
+            <div class="card">
+                <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 class="font-bold" style="font-size: 1.25rem;">Harcama Kategorileri</h3>
+                    <span class="text-secondary font-medium">Bu Ay (Ekim)</span>
+                </div>
+
+                <div class="chart-wrapper">
+                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100"
+                        style="width: 100%; height: 100%; transform: rotate(-90deg);">
+                        <!-- Mutfak 40% -->
+                        <circle cx="50" cy="50" fill="transparent" r="40" stroke="#0d59f2" stroke-dasharray="251.2"
+                            stroke-dashoffset="150.72" stroke-width="20"></circle>
+                        <!-- Sağlık 25% -->
+                        <circle cx="50" cy="50" fill="transparent" r="40" stroke="#2D7D46" stroke-dasharray="251.2"
+                            stroke-dashoffset="213.52" stroke-width="20" transform="rotate(90, 50, 50)"></circle>
+                        <!-- Ulaşım 20% -->
+                        <circle cx="50" cy="50" fill="transparent" r="40" stroke="#ed6c02" stroke-dasharray="251.2"
+                            stroke-dashoffset="226.08" stroke-width="20" transform="rotate(180, 50, 50)"></circle>
+                        <!-- Diğer 15% -->
+                        <circle cx="50" cy="50" fill="transparent" r="40" stroke="#6366f1" stroke-dasharray="251.2"
+                            stroke-dashoffset="238.64" stroke-width="20" transform="rotate(252, 50, 50)"></circle>
+                    </svg>
+                    <div class="chart-center">
+                        <p class="text-secondary font-bold" style="font-size: 0.875rem;">Toplam</p>
+                        <p id="chart-total" style="font-size: 1.5rem; font-weight: 900;">₺0,00</p>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div style="margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="flex items-center gap-2">
+                        <div
+                            style="width: 1rem; height: 1rem; border-radius: 50%; background-color: var(--color-primary);">
+                        </div>
+                        <span class="font-medium">Mutfak (%40)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div
+                            style="width: 1rem; height: 1rem; border-radius: 50%; background-color: var(--color-success);">
+                        </div>
+                        <span class="font-medium">Sağlık (%25)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div
+                            style="width: 1rem; height: 1rem; border-radius: 50%; background-color: var(--color-warning);">
+                        </div>
+                        <span class="font-medium">Ulaşım (%20)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div style="width: 1rem; height: 1rem; border-radius: 50%; background-color: #6366f1;"></div>
+                        <span class="font-medium">Diğer (%15)</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 3. A11y Tip -->
+        <div class="a11y-tip">
+            <span class="material-symbols-outlined" style="font-size: 2rem; color: var(--color-primary);">info</span>
+            <p style="color: var(--color-primary-dark); font-weight: 500; font-size: 1.125rem;">
+                <strong>Yardım:</strong> Yazıları daha büyük görmek için klavyenizden <span class="kbd">Ctrl</span> ve
+                <span class="kbd">+</span> tuşlarına basabilirsiniz.
+            </p>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-8"
+        style="border-top: 1px solid var(--color-border); padding: 2rem; color: var(--color-text-secondary);">
+        <p>© 2024 Ev Finans Takip Sistemi - Kullanım Kolaylığı Odaklı Tasarım</p>
+    </footer>
+
+    <!-- scripts -->
+    <script src="js/notifications.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Modal (Add Expense) -->
+    <div id="expense-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content card">
+            <div class="modal-header">
+                <h2 style="font-size: 1.5rem; font-weight: 800;">Yeni Gider Ekle</h2>
+                <button id="close-modal-btn" class="btn-icon" aria-label="Kapat">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <form id="expense-form" class="modal-form">
+                <div class="form-group">
+                    <label for="title">Harcama Adı</label>
+                    <input type="text" id="title" name="title" placeholder="Örn: Market" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Tutar (TL)</label>
+                    <input type="number" id="amount" name="amount" placeholder="0.00" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Kategori</label>
+                    <select id="category" name="category">
+                        <option value="Mutfak">Mutfak</option>
+                        <option value="Sağlık">Sağlık</option>
+                        <option value="Ulaşım">Ulaşım</option>
+                        <option value="Diğer">Diğer</option>
+                    </select>
+                </div>
+
+                <div class="form-group"
+                    style="flex-direction: row; align-items: center; gap: 0.75rem; margin-top: 0.5rem;">
+                    <input type="checkbox" id="is_recurring" name="is_recurring"
+                        style="width: 1.25rem; height: 1.25rem;">
+                    <label for="is_recurring" style="margin-bottom: 0; font-size: 1rem;">Her Ay Tekrarla</label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="cancel-btn" class="btn"
+                        style="border: 2px solid var(--color-border);">Vazgec</button>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

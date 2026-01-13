@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gelirler | Finansal Özet</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/notifications.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="container header-content">
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="btn-icon" style="background-color: var(--color-bg-body);">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+                <h1 style="font-size: 1.5rem; font-weight: 800;">Gelirlerim</h1>
+            </div>
+
+            <div class="flex gap-2">
+                <button class="btn btn-primary" onclick="openModal()" style="background-color: var(--color-success);">
+                    <span class="material-symbols-outlined">add</span>
+                    Gelir Ekle
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-8">
+
+        <!-- Summary Card -->
+        <div class="card mb-8" style="margin-bottom: 2rem; border-color: var(--color-success);">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 style="font-size: 1.25rem; color: var(--color-text-secondary);">Bu Ay Toplam Gelir</h2>
+                    <p id="total-income-display"
+                        style="font-size: 2.5rem; font-weight: 900; color: var(--color-success);">₺0,00</p>
+                </div>
+                <div class="icon-box"
+                    style="width: 4rem; height: 4rem; font-size: 2rem; background-color: var(--color-success-bg); color: var(--color-success);">
+                    <span class="material-symbols-outlined">trending_up</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Income List -->
+        <div class="card" style="padding: 0; overflow: hidden;">
+            <div id="income-list">
+                <div style="padding: 2rem; text-align: center;">Yükleniyor...</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal (Add Income) -->
+    <div id="income-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content card">
+            <div class="modal-header">
+                <h2 style="font-size: 1.5rem; font-weight: 800;">Yeni Gelir Ekle</h2>
+                <button id="close-modal-btn" class="btn-icon" aria-label="Kapat">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <form id="income-form" class="modal-form">
+                <div class="form-group">
+                    <label for="title">Gelir Adı</label>
+                    <input type="text" id="title" name="title" placeholder="Örn: Maaş, Kira Geliri" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Tutar (TL)</label>
+                    <input type="number" id="amount" name="amount" placeholder="0.00" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Kategori</label>
+                    <select id="category" name="category">
+                        <option value="Maaş">Maaş</option>
+                        <option value="Kira">Kira</option>
+                        <option value="Ek Gelir">Ek Gelir</option>
+                        <option value="Yatırım">Yatırım</option>
+                        <option value="Diğer">Diğer</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="cancel-btn" class="btn"
+                        style="border: 2px solid var(--color-border);">Vazgec</button>
+                    <button type="submit" class="btn btn-primary"
+                        style="background-color: var(--color-success);">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/notifications.js"></script>
+    <!-- Reusing logic but slightly modified for income -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initIncomePage();
+            initModal();
+        });
+
+        async function initIncomePage() {
+            const listContainer = document.getElementById('income-list');
+            try {
+                const response = await fetch('/api/transactions?type=income&limit=100');
+                const data = await response.json();
+
+                // Render List
+                if (data.length === 0) {
+                    listContainer.innerHTML = `
+                        <div style="padding: 3rem; text-align: center; color: var(--color-text-secondary);">
+                            <span class="material-symbols-outlined" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">account_balance_wallet</span>
+                            <p>Henüz gelir kaydı yok.</p>
+                            <button class="btn btn-primary" onclick="openModal()" style="margin-top: 1rem; background-color: var(--color-success);">Gelir Ekle</button>
+                        </div>
+                    `;
+                } else {
+                    listContainer.innerHTML = data.map(item => {
+                        const date = new Date(item.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
+                        return `
+                            <div class="list-item">
+                                <div class="item-icon" style="background-color: var(--color-success-bg); color: var(--color-success);">
+                                    <span class="material-symbols-outlined">account_balance_wallet</span>
+                                </div>
+                                <div style="flex: 1;">
+                                    <p class="font-bold text-lg">${item.title}</p>
+                                    <p class="text-secondary" style="font-size: 0.9rem;">${date}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-xl" style="color: var(--color-success);">+₺${item.amount.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}</p>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                // Update Total
+                const total = data.reduce((sum, item) => sum + item.amount, 0);
+                document.getElementById('total-income-display').textContent =
+                    total.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' });
+
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function initModal() {
+            const modal = document.getElementById('income-modal');
+            const closeBtn = document.getElementById('close-modal-btn');
+            const cancelBtn = document.getElementById('cancel-btn');
+            const backdrop = document.querySelector('.modal-backdrop');
+            const form = document.getElementById('income-form');
+
+            [closeBtn, cancelBtn, backdrop].forEach(el => {
+                if (el) el.addEventListener('click', closeModal);
+            });
+
+            if (form) {
+                form.addEventListener('submit', handleFormSubmit);
+            }
+        }
+
+        function openModal() {
+            document.getElementById('income-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('income-modal').classList.add('hidden');
+            document.getElementById('income-form').reset();
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = {
+                title: formData.get('title'),
+                amount: parseFloat(formData.get('amount')),
+                category: formData.get('category'),
+                type: 'income',
+                date: new Date().toISOString()
+            };
+
+            try {
+                const res = await fetch('/api/transactions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (res.ok) {
+                    closeModal();
+                    initIncomePage();
+                    Toast.show('Gelir Eklendi!', 'success');
+                }
+            } catch (err) {
+                Toast.show('Hata oluştu.', 'error');
+            }
+        }
+    </script>
+</body>
+
+</html>

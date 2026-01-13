@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ödeme Takvimi - Kolay Takip</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#197fe6",
+              "background-light": "#f6f7f8",
+              "background-dark": "#111921",
+              "success": "#22c55e",
+              "warning": "#f59e0b",
+              "danger": "#ef4444",
+            },
+            fontFamily: {
+              "display": ["Lexend", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Lexend', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        .calendar-cell {
+            min-height: 160px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#0e141b] dark:text-slate-50 min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="bg-white dark:bg-slate-900 border-b border-solid border-[#e7edf3] dark:border-slate-800 px-6 lg:px-20 py-4 sticky top-0 z-50">
+<div class="max-w-[1400px] mx-auto flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="bg-primary text-white p-2 rounded-lg">
+<span class="material-symbols-outlined text-3xl">calendar_month</span>
+</div>
+<h1 class="text-2xl font-bold tracking-tight">Ödeme Takvimi</h1>
+</div>
+<nav class="hidden md:flex items-center gap-10">
+<a class="text-primary text-lg font-semibold border-b-2 border-primary pb-1" href="#">Takvim</a>
+<a class="text-[#4e7397] dark:text-slate-400 text-lg font-medium hover:text-primary transition-colors" href="#">Borçlar</a>
+<a class="text-[#4e7397] dark:text-slate-400 text-lg font-medium hover:text-primary transition-colors" href="#">Faturalar</a>
+<a class="text-[#4e7397] dark:text-slate-400 text-lg font-medium hover:text-primary transition-colors" href="#">Ayarlar</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center rounded-xl h-12 w-12 bg-[#e7edf3] dark:bg-slate-800 text-[#0e141b] dark:text-slate-50">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="hidden sm:block text-right">
+<p class="text-sm font-bold">Ahmet Bey</p>
+<p class="text-xs text-[#4e7397]">Emekli</p>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12 border-2 border-primary/20" data-alt="User profile picture showing an elderly man" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDbbBOW4plhge6dSvnmHpr4R9UbY5Y7gD4xzKYnufxsOqrg2bbMQtY4p7Chmut6yzLHVCfmHgD6zsg3GdcEj3CZXhSdQH16mFFJYzSQF98A9LOMrNIkLnuhO8Prm_oDrQM1aLJXR7yK-KQfMY6zqgRxWicMnH8W-U4nDta4f6U6_bRo3TpbxxmUpMlUnXYtLvoTLIrEVELBn7FeUE14gOW7AENtTViaxxJBW5MbDeMhwfPTnyiQ0g-R4NTjubqxoevH904he7tNBClc");'>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 max-w-[1400px] mx-auto w-full p-4 lg:p-10">
+<!-- Calendar Controls -->
+<div class="flex flex-col md:flex-row items-center justify-between mb-8 gap-4 bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-4">
+<button class="bg-primary text-white px-8 py-3 rounded-xl font-bold text-lg shadow-md hover:bg-primary/90 active:scale-95 transition-all">
+                    Bugün
+                </button>
+<div class="flex items-center gap-2">
+<button class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700">
+<span class="material-symbols-outlined text-3xl">chevron_left</span>
+</button>
+<button class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700">
+<span class="material-symbols-outlined text-3xl">chevron_right</span>
+</button>
+</div>
+<h2 class="text-3xl font-bold ml-4">Ekim 2023</h2>
+</div>
+<div class="flex bg-slate-100 dark:bg-slate-800 p-1.5 rounded-xl">
+<button class="px-6 py-2 rounded-lg bg-white dark:bg-slate-700 shadow-sm font-bold">Ay</button>
+<button class="px-6 py-2 rounded-lg text-slate-500 font-medium">Hafta</button>
+<button class="px-6 py-2 rounded-lg text-slate-500 font-medium">Liste</button>
+</div>
+</div>
+<!-- Legend -->
+<div class="flex flex-wrap gap-6 mb-6 px-2">
+<div class="flex items-center gap-2">
+<span class="size-4 rounded-full bg-danger"></span>
+<span class="text-lg font-medium">Gecikmiş</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="size-4 rounded-full bg-primary"></span>
+<span class="text-lg font-medium">Yaklaşıyor</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="size-4 rounded-full bg-success"></span>
+<span class="text-lg font-medium">Ödendi</span>
+</div>
+</div>
+<!-- Calendar Grid -->
+<div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border-2 border-slate-200 dark:border-slate-800 overflow-hidden">
+<!-- Day Names -->
+<div class="calendar-grid border-b-2 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+<div class="py-4 text-center font-bold text-lg text-slate-500">Pazartesi</div>
+<div class="py-4 text-center font-bold text-lg text-slate-500">Salı</div>
+<div class="py-4 text-center font-bold text-lg text-slate-500">Çarşamba</div>
+<div class="py-4 text-center font-bold text-lg text-slate-500">Perşembe</div>
+<div class="py-4 text-center font-bold text-lg text-slate-500">Cuma</div>
+<div class="py-4 text-center font-bold text-lg text-danger">Cumartesi</div>
+<div class="py-4 text-center font-bold text-lg text-danger">Pazar</div>
+</div>
+<!-- Grid Cells -->
+<div class="calendar-grid">
+<!-- Empty cells for start of month -->
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/20"></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/20"></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/20"></div>
+<!-- Day 1 -->
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer">
+<p class="text-2xl font-bold text-slate-400 mb-2">1</p>
+</div>
+<!-- Day 2 -->
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer">
+<p class="text-2xl font-bold text-slate-400 mb-2">2</p>
+<div class="bg-danger text-white p-3 rounded-xl mb-2 flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-lg">electric_bolt</span>
+<div class="flex-1 overflow-hidden">
+<p class="text-base font-bold truncate">Elektrik</p>
+<p class="text-sm font-medium">₺420,00</p>
+</div>
+</div>
+</div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer">
+<p class="text-2xl font-bold text-slate-400 mb-2">3</p>
+</div>
+<!-- Day 4 -->
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer">
+<p class="text-2xl font-bold text-slate-400 mb-2">4</p>
+<div class="bg-success text-white p-3 rounded-xl mb-2 flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-lg">house</span>
+<div class="flex-1 overflow-hidden">
+<p class="text-base font-bold truncate">Kira</p>
+<p class="text-sm font-medium">₺8.500,00</p>
+</div>
+</div>
+</div>
+<!-- Day 5 - Today -->
+<div class="calendar-cell p-3 border-r border-b border-primary/40 bg-primary/10 dark:bg-primary/20 relative group cursor-pointer">
+<div class="absolute top-2 right-2 bg-primary text-white text-xs px-2 py-1 rounded-full font-bold uppercase tracking-wider">Bugün</div>
+<p class="text-3xl font-extrabold text-primary mb-2">5</p>
+<div class="bg-primary text-white p-3 rounded-xl mb-2 flex items-center gap-2 shadow-md">
+<span class="material-symbols-outlined text-lg">credit_card</span>
+<div class="flex-1 overflow-hidden">
+<p class="text-base font-bold truncate">Akbank Kart</p>
+<p class="text-sm font-medium">₺2.150,00</p>
+</div>
+</div>
+</div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer">
+<p class="text-2xl font-bold text-slate-400 mb-2">6</p>
+</div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer">
+<p class="text-2xl font-bold text-slate-400 mb-2">7</p>
+</div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer">
+<p class="text-2xl font-bold text-slate-400 mb-2">8</p>
+</div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer">
+<p class="text-2xl font-bold text-slate-400 mb-2">9</p>
+</div>
+<!-- Day 10 -->
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer">
+<p class="text-2xl font-bold text-slate-400 mb-2">10</p>
+<div class="bg-primary/20 text-primary border-2 border-primary p-2.5 rounded-xl mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg font-bold">water_drop</span>
+<div class="flex-1 overflow-hidden">
+<p class="text-base font-bold truncate">Su Faturası</p>
+<p class="text-sm font-bold">₺185,00</p>
+</div>
+</div>
+</div>
+<!-- Continuing grid with filler cells -->
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">11</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">12</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">13</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">14</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">15</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">16</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">17</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">18</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">19</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">20</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">21</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">22</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">23</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">24</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">25</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">26</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">27</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">28</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">29</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">30</p></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 group hover:bg-primary/5 transition-colors cursor-pointer"><p class="text-2xl font-bold text-slate-400 mb-2">31</p></div>
+<!-- Last dummy cells -->
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/20"></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/20"></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/20"></div>
+<div class="calendar-cell p-3 border-r border-b border-slate-200 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/20"></div>
+</div>
+</div>
+</main>
+<!-- Detail Modal (Overlay) -->
+<div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+<div class="bg-white dark:bg-slate-900 w-full max-w-xl rounded-[2rem] shadow-2xl overflow-hidden border-4 border-primary">
+<!-- Modal Header -->
+<div class="bg-primary p-8 text-white flex justify-between items-start">
+<div>
+<h3 class="text-4xl font-extrabold mb-1">Akbank Kart</h3>
+<p class="text-xl font-medium opacity-90">Kredi Kartı Ekstresi</p>
+</div>
+<button class="bg-white/20 hover:bg-white/30 rounded-full p-2 transition-colors">
+<span class="material-symbols-outlined text-4xl">close</span>
+</button>
+</div>
+<!-- Modal Content -->
+<div class="p-10 space-y-10">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-slate-500 text-xl font-medium mb-2 uppercase tracking-wide">Ödenecek Tutar</p>
+<p class="text-6xl font-black text-primary">₺2.150,00</p>
+</div>
+<div class="bg-primary/10 p-6 rounded-2xl">
+<span class="material-symbols-outlined text-6xl text-primary">credit_card</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl border-2 border-slate-100 dark:border-slate-700">
+<p class="text-slate-500 text-lg font-bold mb-1">Son Tarih</p>
+<p class="text-2xl font-extrabold text-[#0e141b] dark:text-white">05 Ekim 2023</p>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl border-2 border-slate-100 dark:border-slate-700">
+<p class="text-slate-500 text-lg font-bold mb-1">Durum</p>
+<div class="flex items-center gap-2 text-warning">
+<span class="material-symbols-outlined font-bold">pending_actions</span>
+<p class="text-2xl font-extrabold">Ödeme Bekliyor</p>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<button class="w-full bg-primary text-white py-6 rounded-2xl text-2xl font-black shadow-lg hover:shadow-primary/30 active:scale-[0.98] transition-all flex items-center justify-center gap-3">
+<span class="material-symbols-outlined text-3xl">check_circle</span>
+                        ÖDENDİ OLARAK İŞARETLE
+                    </button>
+<button class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 py-6 rounded-2xl text-2xl font-bold hover:bg-slate-200 transition-colors">
+                        KAPAT
+                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Tooltip Footer for Seniors -->
+<footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-6 px-10 text-center">
+<p class="text-xl font-medium text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined align-middle mr-2 text-primary">info</span>
+            Yardım almak için <strong>0850 000 00 00</strong> numaralı telefonu arayabilir veya sağ alt köşedeki yardım butonuna basabilirsiniz.
+        </p>
+</footer>
+</body></html>

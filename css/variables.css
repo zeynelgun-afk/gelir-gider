@@ -1,0 +1,64 @@
+:root {
+    /* 
+     * Renk Paleti (Yüksek Kontrast - Senior Friendly)
+     * Referans: Tasarim Sistemi
+     */
+    --color-primary: #0d59f2;      /* Birincil Mavi - Aksiyonlar */
+    --color-primary-dark: #0a46c2; /* Hover durumları için */
+    --color-primary-light: #e6f0ff; /* Arkaplan vurguları */
+    
+    --color-success: #2D7D46;      /* Başarı Yeşili - Pozitif Durumlar */
+    --color-success-bg: #eaf5ee;
+    
+    --color-error: #D32F2F;        /* Hata Kırmızısı - Uyarılar */
+    --color-error-bg: #fdeceb;
+    
+    --color-warning: #ed6c02;      /* Uyarı Turuncusu */
+    --color-warning-bg: #fff4e5;
+    
+    --color-text-main: #1A1A1A;    /* Ana Metin - Siyah */
+    --color-text-secondary: #666666; /* İkincil Metin - Gri */
+    --color-text-inverse: #FFFFFF;   /* Beyaz Metin */
+
+    --color-bg-body: #f5f6f8;      /* Sayfa Arkaplanı */
+    --color-bg-card: #FFFFFF;      /* Kart Arkaplanı */
+    --color-border: #e0e0e0;       /* Kenarlıklar */
+
+    /* 
+     * Tipografi (Lexend)
+     * Senior Friendly: Min Body 24px önerisi var ama responsive için 
+     * base'i 16px tutup rem ile ölçeklendireceğiz.
+     * Tasarımdaki "Body - 24px" masaüstü içindir.
+     */
+    --font-family: 'Lexend', sans-serif;
+    
+    --text-xs: 0.875rem;   /* 14px */
+    --text-sm: 1rem;       /* 16px */
+    --text-base: 1.25rem;  /* 20px - Biraz büyütüldü */
+    --text-lg: 1.5rem;     /* 24px - Standart okuma boyutu */
+    --text-xl: 1.75rem;    /* 28px */
+    --text-2xl: 2rem;      /* 32px */
+    --text-3xl: 3rem;      /* 48px - Başlıklar */
+
+    /* Spacing & Layout */
+    --radius-sm: 0.5rem;
+    --radius-md: 1rem;
+    --radius-lg: 1.5rem;
+    --radius-full: 9999px;
+
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+/* Dark Mode Desteği (Sistem tercihine göre) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-bg-body: #101622;
+        --color-bg-card: #1a2233;
+        --color-text-main: #ffffff;
+        --color-text-secondary: #a0a0a0;
+        --color-border: #2d3748;
+        --color-primary-light: #1e3a8a;
+    }
+}
