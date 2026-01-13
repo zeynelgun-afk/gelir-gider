@@ -120,3 +120,15 @@ button {
     white-space: nowrap;
     border-width: 0;
 }
+
+/* Animations */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}

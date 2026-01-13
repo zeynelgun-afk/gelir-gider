@@ -28,7 +28,6 @@ function setupFilters() {
 
 async function loadExpenses() {
     const listContainer = document.getElementById('expense-list');
-    const listContainer = document.getElementById('expense-list');
 
     // Simple Loader
     listContainer.innerHTML = `
@@ -88,15 +87,12 @@ async function loadExpenses() {
 
     } catch (error) {
         console.error('Hata:', error);
-    } catch (error) {
-        console.error('Hata:', error);
         listContainer.innerHTML = `
             <div style="padding: 2rem; text-align: center; color: var(--color-error);">
                 <span class="material-symbols-outlined" style="font-size: 2rem;">error</span>
                 <p>Veriler yüklenemedi.</p>
             </div>`;
     }
-}
 }
 
 // Editing State
