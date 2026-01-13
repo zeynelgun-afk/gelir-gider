@@ -230,12 +230,19 @@ function renderChart(data) {
     const series = Object.values(data.chart_data);
 
     // Color mapping based on category names matching CSS variables
-    // Categories: "Mutfak", "Sağlık", "Ulaşım", "Diğer"
     const colorMap = {
         'Mutfak': '#0d59f2', // var(--color-primary)
         'Sağlık': '#2D7D46', // var(--color-success)
         'Ulaşım': '#ed6c02', // var(--color-warning)
         'Diğer': '#6366f1'
+    };
+
+    // Icon mapping
+    const iconMap = {
+        'Mutfak': 'restaurant',
+        'Sağlık': 'medical_services',
+        'Ulaşım': 'directions_bus',
+        'Diğer': 'category'
     };
 
     const colors = labels.map(label => colorMap[label] || '#999999');
@@ -265,18 +272,18 @@ function renderChart(data) {
             pie: {
                 startAngle: -90,
                 endAngle: 90,
-                offsetY: 10,
+                offsetY: 0,
                 donut: {
                     size: '75%',
                     labels: {
-                        show: false // We use our custom center overlay
+                        show: false
                     }
                 }
             }
         },
         grid: {
             padding: {
-                bottom: -80
+                bottom: -100 // Pull up the bottom to reduce white space since legend is gone
             }
         },
         colors: colors,
@@ -284,27 +291,13 @@ function renderChart(data) {
             enabled: false
         },
         legend: {
-            position: 'bottom',
-            fontSize: '14px',
-            fontFamily: "'Lexend', sans-serif",
-            fontWeight: 500,
-            itemMargin: {
-                horizontal: 10,
-                vertical: 5
-            },
-            formatter: function (seriesName, opts) {
-                return seriesName + " (%" + opts.w.globals.series[opts.seriesIndex] + ")"
-            }
+            show: false // Disable default legend
         },
         responsive: [{
             breakpoint: 480,
             options: {
                 chart: {
-                    height: 300
-                },
-                legend: {
-                    position: 'bottom',
-                    fontSize: '12px'
+                    height: 280
                 },
                 plotOptions: {
                     pie: {
@@ -324,8 +317,43 @@ function renderChart(data) {
         }
     };
 
-    const chart = new ApexCharts(document.querySelector("#expense-chart"), options);
+    // Render Chart
+    const chartEl = document.querySelector("#expense-chart");
+    chartEl.innerHTML = ''; // Clear previous if any
+    const chart = new ApexCharts(chartEl, options);
     chart.render();
+
+    // Render Custom Legend
+    renderCustomLegend(labels, series, colors, iconMap);
+}
+
+function renderCustomLegend(labels, series, colors, iconMap) {
+    const legendContainer = document.getElementById('custom-legend');
+    if (!legendContainer) return;
+
+    const html = labels.map((label, index) => {
+        const value = series[index];
+        const color = colors[index];
+        const icon = iconMap[label] || 'circle';
+
+        return `
+            <div class="legend-item" style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--color-border);">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 48px; height: 48px; border-radius: 12px; background-color: ${color}20; display: flex; align-items: center; justify-content: center; color: ${color};">
+                        <span class="material-symbols-outlined" style="font-size: 24px;">${icon}</span>
+                    </div>
+                    <div>
+                        <p style="font-weight: 700; font-size: 1.1rem; color: var(--color-text-primary); margin-bottom: 0;">${label}</p>
+                    </div>
+                </div>
+                <div>
+                     <span style="font-weight: 800; font-size: 1.1rem; color: ${color};">%${value}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    legendContainer.innerHTML = html;
 }
 
 /* Modal Logic */

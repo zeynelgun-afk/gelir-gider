@@ -28,14 +28,20 @@ function setupFilters() {
 
 async function loadExpenses() {
     const listContainer = document.getElementById('expense-list');
-    if (typeof Loader !== 'undefined') {
-        listContainer.innerHTML = Loader.getHTML();
-    } else {
-        listContainer.innerHTML = '<div style="padding: 2rem; text-align: center;">Yükleniyor...</div>';
-    }
+    const listContainer = document.getElementById('expense-list');
+
+    // Simple Loader
+    listContainer.innerHTML = `
+        <div style="padding: 2rem; text-align: center; color: var(--color-text-secondary);">
+            <span class="material-symbols-outlined spin" style="font-size: 2rem;">sync</span>
+            <p>Yükleniyor...</p>
+        </div>`;
 
     let url = '/api/transactions?type=expense&limit=100';
-    if (currentCategory) {
+    // If category is "Tekrarlanan", we will filter client-side or use special backend param if supported.
+    // For now, simpler: fetch all, then filter client side if "Tekrarlanan" is selected, 
+    // unless standard category.
+    if (currentCategory && currentCategory !== 'Tekrarlanan') {
         url += `&category=${currentCategory}`;
     }
 
@@ -71,17 +77,26 @@ async function loadExpenses() {
         // Sort by date desc (though virtuals are 'now')
         allItems.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        renderExpenseList(allItems);
-        updateTotal(allItems);
+        // Filter for "Tekrarlanan" if selected
+        let finalItems = allItems;
+        if (currentCategory === 'Tekrarlanan') {
+            finalItems = allItems.filter(item => item.is_recurring || item.is_virtual);
+        }
+
+        renderExpenseList(finalItems);
+        updateTotal(finalItems);
 
     } catch (error) {
         console.error('Hata:', error);
-        if (typeof Loader !== 'undefined') {
-            listContainer.innerHTML = Loader.getErrorHTML();
-        } else {
-            listContainer.innerHTML = '<div style="padding: 2rem; text-align: center; color: red;">Veriler yüklenemedi.</div>';
-        }
+    } catch (error) {
+        console.error('Hata:', error);
+        listContainer.innerHTML = `
+            <div style="padding: 2rem; text-align: center; color: var(--color-error);">
+                <span class="material-symbols-outlined" style="font-size: 2rem;">error</span>
+                <p>Veriler yüklenemedi.</p>
+            </div>`;
     }
+}
 }
 
 // Editing State

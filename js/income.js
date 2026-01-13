@@ -94,11 +94,23 @@ function openModal(dataStr) {
         document.getElementById('amount').value = data.amount;
         document.getElementById('category').value = data.category;
 
+        // Date
+        if (data.date) {
+            document.getElementById('date').value = data.date.split('T')[0];
+        }
+
+        // Recurring
+        document.getElementById('is_recurring').checked = data.is_recurring || false;
+
         if (deleteBtn) deleteBtn.classList.remove('hidden');
     } else {
         // Add Mode
         editingId = null;
         document.getElementById('income-form').reset();
+
+        // Set Today
+        document.getElementById('date').value = new Date().toISOString().split('T')[0];
+
         if (deleteBtn) deleteBtn.classList.add('hidden');
     }
 }
@@ -129,12 +141,22 @@ async function handleDelete() {
 async function handleFormSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
+
+    // Date Handling
+    let dateVal = formData.get('date');
+    if (!dateVal) {
+        dateVal = new Date().toISOString();
+    } else {
+        dateVal = new Date(dateVal).toISOString();
+    }
+
     const data = {
         title: formData.get('title'),
         amount: parseFloat(formData.get('amount')),
         category: formData.get('category'),
         type: 'income',
-        date: new Date().toISOString()
+        date: dateVal,
+        is_recurring: formData.get('is_recurring') === 'on'
     };
 
     try {
